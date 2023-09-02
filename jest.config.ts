@@ -1,14 +1,14 @@
-import nextJest from "next/jest";
-import type { Config } from "jest";
+import nextJest from 'next/jest';
+import type { Config } from 'jest';
 
 const createJestConfig = nextJest({
-  dir: "./src",
+  dir: './src',
 });
 
 const customConfig: Config = {
   clearMocks: true,
-  coverageDirectory: "coverage",
-  testEnvironment: "jsdom",
+  coverageDirectory: 'coverage',
+  testEnvironment: 'jsdom',
 };
 
 module.exports = createJestConfig(customConfig);
