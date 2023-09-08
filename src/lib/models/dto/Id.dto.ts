@@ -1,5 +1,3 @@
-import { FindManyDTO } from '@/server/types';
-
-export type IdDTO = FindManyDTO<{
+export type IdDTO = {
   id?: string;
-}>;
+};
