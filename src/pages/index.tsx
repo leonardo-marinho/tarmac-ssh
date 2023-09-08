@@ -1,6 +1,6 @@
-import InlineNav from '@/components/UI/InlineNav/InlineNav';
-import InlineNavItem from '@/components/UI/InlineNavItem/InlineNavItem';
-import Link from '@/components/UI/Link/Link';
+import InlineNav from '@/client/components/UI/InlineNav/InlineNav';
+import InlineNavItem from '@/client/components/UI/InlineNavItem/InlineNavItem';
+import Link from '@/client/components/UI/Link/Link';
 import { FC } from 'react';
 
 const Landing: FC = () => {
