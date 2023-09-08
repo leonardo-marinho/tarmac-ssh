@@ -1,5 +1,5 @@
 import { Prisma, User } from '@prisma/client';
-import { InfinitePaginationResponseType } from '../types';
+import { InfinitePaginationType } from '../types';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CreateUserDTO } from '@/lib/models/dto/CreateUser.dto';
 import prisma from '@/lib/prisma';
@@ -12,7 +12,10 @@ import { handlePrismaErrorResponse } from '../utils/handlePrismaErrorResponse';
 import { FindManyUserDTO } from '@/lib/models/dto/FindManyUser.dto';
 import { FindManyUserDtoSchema } from '@/lib/validations/FindManyUserDto.schema';
 import { resolveBulkArgs } from '@/server/utils/resolveBulkArgs';
-import { DEFAULT_ITEMS_PER_PAGE } from '../constants';
+import { resolveInfinitePagination } from '../utils/resolveInfinitePagination';
+import { resolvePrismaPaginationArgs } from '@/server/utils/resolvePrismaPaginationArgs';
+import { IdDTO } from '@/lib/models/dto/Id.dto';
+import { IdDtoSchema } from '@/lib/validations/IdDto.schema';
 
 class UserController {
   async create(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -44,8 +47,48 @@ class UserController {
     }
   }
 
+  async deleteById(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const query: IdDTO = req.query;
+
+    try {
+      IdDtoSchema.validateSync(query);
+    } catch (error) {
+      handleValidationErrorResponse(req, res, error as Error);
+      return;
+    }
+
+    try {
+      const response: User | null = await prisma.user.delete({
+        where: {
+          id: Number(query.id),
+        },
+      });
+
+      if (!response) {
+        handleNotFoundResponse(req, res);
+      } else {
+        res
+          .status(HttpResponseCodesEnum.OK)
+          .json(resolveInfinitePaginationResponse(response));
+      }
+
+      res
+        .status(HttpResponseCodesEnum.CREATED)
+        .json(resolveInfinitePaginationResponse(response));
+    } catch (error) {
+      handlePrismaErrorResponse(
+        req,
+        res,
+        error as Prisma.PrismaClientKnownRequestError,
+      );
+    }
+  }
+
   async findMany(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     const query: FindManyUserDTO = req.query as unknown as FindManyUserDTO;
+    const pagination: InfinitePaginationType = resolveInfinitePagination(
+      req.query,
+    );
 
     try {
       FindManyUserDtoSchema.validateSync(query);
@@ -54,28 +97,19 @@ class UserController {
       return;
     }
 
-    const whereArgs = resolveBulkArgs<Prisma.UserWhereInput>([
-      [query?.ids || [], 'id'],
-      [query?.usernames || [], 'username'],
-      [query?.accountHashes || [], 'accountHash'],
-    ]);
-    console.log(whereArgs);
-    const itemsPerPage = query.itemsPerPage || DEFAULT_ITEMS_PER_PAGE;
-
     try {
       const response = await prisma.user.findMany({
-        where: {
-          // ...(whereArgs.length > 0 ? { OR: whereArgs } : {}),
-          OR: [{ id: 6 }],
-        },
-        take: itemsPerPage + 1,
+        where: resolveBulkArgs<Prisma.UserWhereInput>([
+          [query?.ids || [], 'id'],
+          [query?.usernames || [], 'username'],
+          [query?.accountHashes || [], 'accountHash'],
+        ]),
+        ...resolvePrismaPaginationArgs(pagination),
       });
-
-      const hasMore = response.length > itemsPerPage;
 
       res
         .status(HttpResponseCodesEnum.CREATED)
-        .json(resolveInfinitePaginationResponse(response, query.page, hasMore));
+        .json(resolveInfinitePaginationResponse(response, pagination));
     } catch (error) {
       handlePrismaErrorResponse(
         req,
@@ -86,11 +120,18 @@ class UserController {
   }
 
   async getById(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const id = Number(req.query.id);
+    const query: IdDTO = req.query;
+
+    try {
+      IdDtoSchema.validateSync(query);
+    } catch (error) {
+      handleValidationErrorResponse(req, res, error as Error);
+      return;
+    }
 
     const response: User | null = await prisma.user.findUnique({
       where: {
-        id,
+        id: Number(query.id),
       },
     });
 
@@ -104,6 +145,4 @@ class UserController {
   }
 }
 
-const instance = new UserController();
-
-export default instance;
+export default new UserController();

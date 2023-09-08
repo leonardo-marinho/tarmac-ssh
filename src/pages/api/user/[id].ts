@@ -8,6 +8,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     return await UserController.getById(req, res);
   }
 
+  if (req.method === ControllerMethodsEnum.DELETE) {
+    return await UserController.deleteById(req, res);
+  }
+
   handleUnsupportedMethod(req, res);
 };
 
