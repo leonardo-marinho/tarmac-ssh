@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiErrors } from '../constants';
 import { HttpResponseCodesEnum } from '../enum';
 import { ControllerErrorResponseType } from '../types';
+import { Prisma } from '@prisma/client';
 
 export const handleUnknownPrismaErrorResponse = (
   _: NextApiRequest,
