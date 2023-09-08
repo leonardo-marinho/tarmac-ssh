@@ -16,6 +16,8 @@ import { resolveInfinitePagination } from '../utils/resolveInfinitePagination';
 import { resolvePrismaPaginationArgs } from '@/server/utils/resolvePrismaPaginationArgs';
 import { IdDTO } from '@/lib/models/dto/Id.dto';
 import { IdDtoSchema } from '@/lib/validations/IdDto.schema';
+import { HashDTO } from '@/lib/models/dto/Hash.dto';
+import { HashDtoSchema } from '@/lib/validations/HashDto.schema';
 
 class UserController {
   async create(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -116,6 +118,31 @@ class UserController {
         res,
         error as Prisma.PrismaClientKnownRequestError,
       );
+    }
+  }
+
+  async getByHash(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const query: HashDTO = req.query;
+
+    try {
+      HashDtoSchema.validateSync(query);
+    } catch (error) {
+      handleValidationErrorResponse(req, res, error as Error);
+      return;
+    }
+
+    const response: User | null = await prisma.user.findUnique({
+      where: {
+        accountHash: query.hash,
+      },
+    });
+
+    if (!response) {
+      handleNotFoundResponse(req, res);
+    } else {
+      res
+        .status(HttpResponseCodesEnum.OK)
+        .json(resolveInfinitePaginationResponse(response));
     }
   }
 
