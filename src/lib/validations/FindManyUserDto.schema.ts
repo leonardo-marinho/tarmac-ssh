@@ -1,4 +1,4 @@
-import { array, number, object, string } from 'yup';
+import { object, string } from 'yup';
 import { CreateUserDTO } from '../models/dto/CreateUser.dto';
 import { InfinitePaginationValidationSchema } from './InfinitePagination.schema';
 

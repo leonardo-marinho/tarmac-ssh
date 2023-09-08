@@ -28,6 +28,11 @@ export type ModelWithoutLogs<TModel> = Omit<
 export type CreateDTO<TModel> = Omit<ModelWithoutLogs<TModel>, 'id'>;
 
 export interface InfinitePaginationDTO {
+  page?: string;
+  itemsPerPage?: string;
+}
+
+export interface InfinitePaginationType {
   page: number;
   itemsPerPage: number;
 }

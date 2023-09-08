@@ -1,15 +1,9 @@
 import { FC, HTMLAttributes } from 'react';
 import classNames from 'classnames';
 
-export interface InlineNavItemProps extends HTMLAttributes<HTMLLIElement> {
-  active?: boolean;
-}
+export interface InlineNavItemProps extends HTMLAttributes<HTMLLIElement> {}
 
-const InlineNavItem: FC<InlineNavItemProps> = ({
-  active = false,
-  children,
-  ...htmlProps
-}) => {
+const InlineNavItem: FC<InlineNavItemProps> = ({ children, ...htmlProps }) => {
   return (
     <li
       {...htmlProps}

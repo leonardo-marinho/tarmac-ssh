@@ -4,6 +4,7 @@ import { ControllerErrorResponseType } from '../types';
 import { Prisma } from '@prisma/client';
 import { handleValidationErrorResponse } from './handleValidationErrorResponse';
 import { handleUnknownPrismaErrorResponse } from './handleUnknownPrismaErrorResponse';
+import { handleNotFoundResponse } from './handleNotFoundReponse';
 
 export const handlePrismaErrorResponse = (
   _: NextApiRequest,
@@ -12,6 +13,8 @@ export const handlePrismaErrorResponse = (
 ): void => {
   if (error.code === PrismaErrorsEnum.UNIQUE_CONSTRAINT_VALIDATION) {
     handleValidationErrorResponse(_, res, error);
+  } else if (error.code === PrismaErrorsEnum.RECORD_NOT_FOUND) {
+    handleNotFoundResponse(_, res, error);
   } else {
     handleUnknownPrismaErrorResponse(_, res, error);
   }
