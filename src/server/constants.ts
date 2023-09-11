@@ -1,5 +1,5 @@
 import { ApiErrorNamesType, ControllerErrorResponseType } from './types';
-import { HttpResponseCodesEnum, HttpResponseCodesNamesEnum } from './enum';
+import { HttpResponseCodesEnum, HttpResponseCodesNamesEnum } from './enums';
 
 export const ApiErrors: Record<
   ApiErrorNamesType,

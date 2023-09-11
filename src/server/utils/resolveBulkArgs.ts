@@ -1,22 +1,18 @@
-import { isString } from 'lodash';
-import { AnyObject } from 'yup';
-
 export const resolveBulkArgs = <TWhere>(
-  args: [string[], string][],
+  args: { value: string | undefined; key: keyof TWhere }[],
   and: Partial<TWhere> = {},
-): { OR: TWhere[] } | AnyObject => {
-  args = args.map(([arr, key]) =>
-    isString(arr) ? [arr.replaceAll(', ', ',').split(','), key] : [[], key],
-  );
-
+): { OR: TWhere[] } | undefined => {
   const resolvedArgs = args
-    .map(([arr, key]) =>
-      (arr || []).map((arg) => ({
-        [key]: Number.isNaN(Number(arg)) ? arg : Number(arg),
-        ...and,
-      })),
+    .filter((arg) => arg.value !== undefined)
+    .filter((arg) => arg.value!.trim() !== '')
+    .map(({ key, value }) =>
+      value!.split(',').map((value) => ({ key, value: value.trim() })),
     )
-    .flat() as TWhere[];
+    .flat()
+    .map(({ key, value }) => ({
+      [key]: value,
+      ...and,
+    })) as TWhere[];
 
-  return resolvedArgs.length > 0 ? { OR: resolvedArgs } : {};
+  return resolvedArgs.length > 0 ? { OR: resolvedArgs } : undefined;
 };

@@ -1,5 +1,5 @@
 import { AnyObject } from 'yup';
-import { HttpResponseCodesEnum } from './enum';
+import { HttpResponseCodesEnum } from './enums';
 
 export interface InfinitePaginationResponseType<TData> {
   hasMore: boolean;

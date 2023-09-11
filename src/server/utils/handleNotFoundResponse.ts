@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiErrors } from '../constants';
-import { HttpResponseCodesEnum } from '../enum';
+import { HttpResponseCodesEnum } from '../enums';
 import { ControllerErrorResponseType } from '../types';
 import { AnyObject } from 'yup';
 

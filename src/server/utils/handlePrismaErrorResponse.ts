@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { PrismaErrorsEnum } from '../enum';
+import { PrismaErrorsEnum } from '../enums';
 import { ControllerErrorResponseType } from '../types';
 import { Prisma } from '@prisma/client';
 import { handleValidationErrorResponse } from './handleValidationErrorResponse';
 import { handleUnknownPrismaErrorResponse } from './handleUnknownPrismaErrorResponse';
-import { handleNotFoundResponse } from './handleNotFoundReponse';
+import { handleNotFoundResponse } from './handleNotFoundResponse';
 
 export const handlePrismaErrorResponse = (
   _: NextApiRequest,

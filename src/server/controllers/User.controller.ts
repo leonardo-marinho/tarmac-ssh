@@ -3,9 +3,9 @@ import { InfinitePaginationType } from '../types';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CreateUserDTO } from '@/lib/models/dto/CreateUser.dto';
 import prisma from '@/lib/prisma';
-import { HttpResponseCodesEnum } from '../enum';
-import { resolveInfinitePaginationResponse } from '../utils/resolvePaginatedResponse';
-import { handleNotFoundResponse } from '../utils/handleNotFoundReponse';
+import { HttpResponseCodesEnum } from '../enums';
+import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
+import { handleNotFoundResponse } from '../utils/handleNotFoundResponse';
 import { createUserDtoSchema } from '@/lib/validations/CreateUserDto.schema';
 import { handleValidationErrorResponse } from '../utils/handleValidationErrorResponse';
 import { handlePrismaErrorResponse } from '../utils/handlePrismaErrorResponse';
@@ -102,9 +102,18 @@ class UserController {
     try {
       const response = await prisma.user.findMany({
         where: resolveBulkArgs<Prisma.UserWhereInput>([
-          [query?.ids || [], 'id'],
-          [query?.usernames || [], 'username'],
-          [query?.accountHashes || [], 'accountHash'],
+          {
+            key: 'id',
+            value: query?.ids,
+          },
+          {
+            key: 'username',
+            value: query?.usernames,
+          },
+          {
+            key: 'accountHash',
+            value: query?.accountHashes,
+          },
         ]),
         ...resolvePrismaPaginationArgs(pagination),
       });

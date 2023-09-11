@@ -1,5 +1,5 @@
 import UserController from '@/server/controllers/User.controller';
-import { ControllerMethodsEnum } from '@/server/enum';
+import { ControllerMethodsEnum } from '@/server/enums';
 import { handleUnsupportedMethod } from '@/server/utils/handleUnsupportedMethod';
 import type { NextApiRequest, NextApiResponse } from 'next';
 

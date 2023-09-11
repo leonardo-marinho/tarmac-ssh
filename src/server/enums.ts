@@ -31,4 +31,5 @@ export enum HttpResponseCodesEnum {
 export enum PrismaErrorsEnum {
   UNIQUE_CONSTRAINT_VALIDATION = 'P2002',
   RECORD_NOT_FOUND = 'P2025',
+  UNKNOWN = 'P-1',
 }
