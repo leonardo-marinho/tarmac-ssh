@@ -2,11 +2,11 @@ import { faker } from '@faker-js/faker';
 import { User } from '@prisma/client';
 
 export const mockUser = (value?: Partial<User>): User => ({
-  id: faker.number.int({ min: 1, max: 100 }),
-  username: faker.internet.userName(),
   accountHash: faker.string.uuid(),
-  disabled: faker.datatype.boolean(),
   createdAt: faker.date.past(),
+  disabled: faker.datatype.boolean(),
+  id: faker.number.int({ max: 100, min: 1 }),
   updatedAt: faker.date.past(),
+  username: faker.internet.userName(),
   ...value,
 });

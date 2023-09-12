@@ -9,19 +9,14 @@ const Landing: FC = () => {
       <header className="absolute h-14 flex flex-row justify-end px-20 w-full top-0 left-0">
         <InlineNav>
           <InlineNavItem>
-            <Link
-              href="https://github.com/leonardo-marinho/tarmac-ssh"
-              external
-            >
+            <Link external href="https://github.com/leonardo-marinho/tarmac-ssh">
               Repo
             </Link>
           </InlineNavItem>
           <InlineNavItem>
             <Link href="/about">About</Link>
           </InlineNavItem>
-          <InlineNavItem className="font-medium text-neutral-400">
-            Sign in
-          </InlineNavItem>
+          <InlineNavItem className="font-medium text-neutral-400">Sign in</InlineNavItem>
         </InlineNav>
       </header>
       <main className="flex cursor-default h-full items-center pt-14 justify-between w-full">
@@ -31,9 +26,8 @@ const Landing: FC = () => {
               Here misfortune and lucks go hand in hand!
             </h1>
             <p className="text-neutral-400 font-light">
-              Get ready for an unbelievable journey of luck and misfortune. Who
-              knows, you might be the next lucky winner! Your bets are securely
-              insured by Ethereum smart contracts.
+              Get ready for an unbelievable journey of luck and misfortune. Who knows, you might be
+              the next lucky winner! Your bets are securely insured by Ethereum smart contracts.
             </p>
           </div>
           <div className="cursor-default flex flex-col justify-end">

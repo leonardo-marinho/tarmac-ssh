@@ -1,5 +1,5 @@
-import { NextApiResponse } from 'next';
 import { mockDeep } from 'jest-mock-extended';
+import { NextApiResponse } from 'next';
 
 interface NextApiResponseMockOptions {
   status?: () => void;

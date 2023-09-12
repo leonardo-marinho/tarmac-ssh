@@ -1,7 +1,6 @@
 import { FC, HTMLAttributes } from 'react';
 
-export interface InlineNavProps
-  extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {}
+export interface InlineNavProps extends Omit<HTMLAttributes<HTMLDivElement>, 'className'> {}
 
 const InlineNav: FC<InlineNavProps> = ({ children, ...htmlProps }) => {
   return (

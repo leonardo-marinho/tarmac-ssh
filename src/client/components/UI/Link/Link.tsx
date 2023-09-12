@@ -1,23 +1,21 @@
+import classNames from 'classnames';
+import NextLink from 'next/link';
 import { AnchorHTMLAttributes, FC, PropsWithChildren } from 'react';
 import { FiExternalLink } from 'react-icons/fi';
-import NextLink from 'next/link';
-import classNames from 'classnames';
 
-interface LinkProps
-  extends PropsWithChildren,
-    AnchorHTMLAttributes<HTMLAnchorElement> {
-  href: string;
+interface LinkProps extends PropsWithChildren, AnchorHTMLAttributes<HTMLAnchorElement> {
   external?: boolean;
+  href: string;
 }
 
-const Link: FC<LinkProps> = ({ children, href, external, ...htmlProps }) => {
+const Link: FC<LinkProps> = ({ children, external, href, ...htmlProps }) => {
   return external ? (
     <a
       {...htmlProps}
       className={classNames('flex items-center gap-2', htmlProps.className)}
       href={href}
-      target="_blank"
       rel="noopener noreferrer"
+      target="_blank"
     >
       {children}
       <FiExternalLink />

@@ -1,5 +1,5 @@
-import { FC, HTMLAttributes } from 'react';
 import classNames from 'classnames';
+import { FC, HTMLAttributes } from 'react';
 
 export interface InlineNavItemProps extends HTMLAttributes<HTMLLIElement> {}
 

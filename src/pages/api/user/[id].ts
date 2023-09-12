@@ -1,8 +1,9 @@
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 import UserController from '@/server/controllers/User.controller';
 import { HttpMethodsEnum } from '@/server/enums';
 import { handleApiError } from '@/server/utils/handleApiError';
 import { handleUnsupportedMethod } from '@/server/utils/handleUnsupportedMethod';
-import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {

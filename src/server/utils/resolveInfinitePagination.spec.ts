@@ -4,8 +4,8 @@ import { resolveInfinitePagination } from './resolveInfinitePagination';
 describe('resolveInfinitePagination', () => {
   it('should resolve empty object', () => {
     expect(resolveInfinitePagination({})).toEqual({
-      page: 1,
       itemsPerPage: DEFAULT_ITEMS_PER_PAGE,
+      page: 1,
     });
   });
 
@@ -15,8 +15,8 @@ describe('resolveInfinitePagination', () => {
         page: '2',
       }),
     ).toEqual({
-      page: 2,
       itemsPerPage: DEFAULT_ITEMS_PER_PAGE,
+      page: 2,
     });
   });
 
@@ -26,32 +26,32 @@ describe('resolveInfinitePagination', () => {
         itemsPerPage: '2',
       }),
     ).toEqual({
-      page: 1,
       itemsPerPage: 2,
+      page: 1,
     });
   });
 
   it('should resolve page and itemsPerPage', () => {
     expect(
       resolveInfinitePagination({
-        page: '2',
         itemsPerPage: '2',
+        page: '2',
       }),
     ).toEqual({
-      page: 2,
       itemsPerPage: 2,
+      page: 2,
     });
   });
 
   it('should resolve page and itemsPerPage with invalid values', () => {
     expect(
       resolveInfinitePagination({
-        page: 'a',
         itemsPerPage: 'a',
+        page: 'a',
       }),
     ).toEqual({
-      page: 1,
       itemsPerPage: DEFAULT_ITEMS_PER_PAGE,
+      page: 1,
     });
   });
 });

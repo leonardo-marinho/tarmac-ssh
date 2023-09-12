@@ -1,10 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+
 import { ApiErrors } from '../constants';
 import { HttpResponseCodesEnum } from '../enums';
-import { ControllerErrorResponseType } from '../types';
+import { NotFoundException } from '../exceptions/NotFound.exception';
 import { UnsupportedMethodException } from '../exceptions/UnsupportedMethod.exception';
 import { ValidationException } from '../exceptions/Validation.exception';
-import { NotFoundException } from '../exceptions/NotFound.exception';
+import { ControllerErrorResponseType } from '../types';
 
 export const handleApiError = (
   _: NextApiRequest,

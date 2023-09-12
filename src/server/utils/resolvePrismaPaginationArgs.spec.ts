@@ -4,24 +4,24 @@ describe('resolvePrismaPaginationArgs', () => {
   it('should resolve page', () => {
     expect(
       resolvePrismaPaginationArgs({
-        page: 2,
         itemsPerPage: 2,
+        page: 2,
       }),
     ).toEqual({
-      take: 3,
       skip: 2,
+      take: 3,
     });
   });
 
   it('should resolve itemsPerPage', () => {
     expect(
       resolvePrismaPaginationArgs({
-        page: 1,
         itemsPerPage: 2,
+        page: 1,
       }),
     ).toEqual({
-      take: 3,
       skip: 0,
+      take: 3,
     });
   });
 });

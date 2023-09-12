@@ -1,44 +1,41 @@
-import { ApiErrorNamesType, ControllerErrorResponseType } from './types';
 import { HttpResponseCodesEnum, HttpResponseCodesNamesEnum } from './enums';
+import { ApiErrorNamesType, ControllerErrorResponseType } from './types';
 
-export const ApiErrors: Record<
-  ApiErrorNamesType,
-  Omit<ControllerErrorResponseType, 'error'>
-> = {
-  [HttpResponseCodesNamesEnum.METHOD_NOT_ALLOWED]: {
-    name: 'Method not allowed',
-    code: HttpResponseCodesNamesEnum.METHOD_NOT_ALLOWED,
-    httpResponseCode: HttpResponseCodesEnum.METHOD_NOT_ALLOWED,
-  },
+export const ApiErrors: Record<ApiErrorNamesType, Omit<ControllerErrorResponseType, 'error'>> = {
   BAD_REQUEST: {
-    name: 'Bad request',
     code: HttpResponseCodesNamesEnum.BAD_REQUEST,
     httpResponseCode: HttpResponseCodesEnum.BAD_REQUEST,
-  },
-  UNAUTHORIZED: {
-    name: 'Unauthorized',
-    code: HttpResponseCodesNamesEnum.UNAUTHORIZED,
-    httpResponseCode: HttpResponseCodesEnum.UNAUTHORIZED,
+    name: 'Bad request',
   },
   FORBIDDEN: {
-    name: 'Forbidden',
     code: HttpResponseCodesNamesEnum.FORBIDDEN,
     httpResponseCode: HttpResponseCodesEnum.FORBIDDEN,
+    name: 'Forbidden',
   },
-  NOT_FOUND: {
-    name: 'Not found',
-    code: HttpResponseCodesNamesEnum.NOT_FOUND,
-    httpResponseCode: HttpResponseCodesEnum.NOT_FOUND,
+  [HttpResponseCodesNamesEnum.METHOD_NOT_ALLOWED]: {
+    code: HttpResponseCodesNamesEnum.METHOD_NOT_ALLOWED,
+    httpResponseCode: HttpResponseCodesEnum.METHOD_NOT_ALLOWED,
+    name: 'Method not allowed',
   },
   INTERNAL_SERVER_ERROR: {
-    name: 'Internal server error',
     code: HttpResponseCodesNamesEnum.INTERNAL_SERVER_ERROR,
     httpResponseCode: HttpResponseCodesEnum.INTERNAL_SERVER_ERROR,
+    name: 'Internal server error',
+  },
+  NOT_FOUND: {
+    code: HttpResponseCodesNamesEnum.NOT_FOUND,
+    httpResponseCode: HttpResponseCodesEnum.NOT_FOUND,
+    name: 'Not found',
+  },
+  UNAUTHORIZED: {
+    code: HttpResponseCodesNamesEnum.UNAUTHORIZED,
+    httpResponseCode: HttpResponseCodesEnum.UNAUTHORIZED,
+    name: 'Unauthorized',
   },
   VALIDATION_ERROR: {
-    name: 'Validation error',
     code: 'VALIDATION_ERROR',
     httpResponseCode: HttpResponseCodesEnum.BAD_REQUEST,
+    name: 'Validation error',
   },
 };
 

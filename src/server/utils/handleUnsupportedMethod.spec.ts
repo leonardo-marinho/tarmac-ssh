@@ -1,8 +1,9 @@
-import { handleUnsupportedMethod } from './handleUnsupportedMethod';
 import { mockNextApiResponse } from '@/lib/mocks/NextApiResponse.mock';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { HttpMethodsEnum, HttpResponseCodesEnum } from '../enums';
+
 import { ApiErrors } from '../constants';
+import { HttpMethodsEnum, HttpResponseCodesEnum } from '../enums';
+import { handleUnsupportedMethod } from './handleUnsupportedMethod';
 
 describe('handleUnsupportedMethod', () => {
   const mockedNextApiResponseJsonFn = jest.fn();

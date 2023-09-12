@@ -3,8 +3,8 @@ import { resolveInfinitePaginationResponse } from './resolveInfinitePaginationRe
 describe('resolvePaginatedResponse', () => {
   it('should resolve empty array', () => {
     expect(resolveInfinitePaginationResponse([])).toEqual({
-      page: 1,
       hasMore: false,
+      page: 1,
       records: [],
     });
   });
@@ -17,8 +17,8 @@ describe('resolvePaginatedResponse', () => {
         },
       ]),
     ).toEqual({
-      page: 1,
       hasMore: false,
+      page: 1,
       records: [
         {
           name: 'Alex',
@@ -42,13 +42,13 @@ describe('resolvePaginatedResponse', () => {
           },
         ],
         {
-          page: 1,
           itemsPerPage: 2,
+          page: 1,
         },
       ),
     ).toEqual({
-      page: 1,
       hasMore: true,
+      page: 1,
       records: [
         {
           name: 'Alex',
@@ -66,8 +66,8 @@ describe('resolvePaginatedResponse', () => {
         name: 'Alex',
       }),
     ).toEqual({
-      page: 1,
       hasMore: false,
+      page: 1,
       records: [
         {
           name: 'Alex',
