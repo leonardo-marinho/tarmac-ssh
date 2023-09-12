@@ -1,4 +1,4 @@
-export enum ControllerMethodsEnum {
+export enum HttpMethodsEnum {
   GET = 'GET',
   POST = 'POST',
   PUT = 'PUT',

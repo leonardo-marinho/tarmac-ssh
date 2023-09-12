@@ -1,5 +1,11 @@
-import { AnyObject } from 'yup';
-import { HttpResponseCodesEnum } from './enums';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { HttpMethodsEnum, HttpResponseCodesEnum } from './enums';
+
+export interface ApiRoute {
+  path: string;
+  method: HttpMethodsEnum;
+  handler: (req: NextApiRequest, res: NextApiResponse) => Promise<unknown>;
+}
 
 export interface InfinitePaginationResponseType<TData> {
   hasMore: boolean;
@@ -8,10 +14,10 @@ export interface InfinitePaginationResponseType<TData> {
 }
 
 export interface ControllerErrorResponseType {
-  message: string;
+  name: string;
   code: string;
   httpResponseCode?: number;
-  error?: AnyObject;
+  message?: string;
 }
 
 export type HttpStatusCodesNamesType = typeof HttpResponseCodesEnum;
@@ -37,5 +43,5 @@ export interface InfinitePaginationType {
   itemsPerPage: number;
 }
 
-export type FindManyDTO<TModel> = ModelWithoutLogs<TModel> &
+export type GetManyDTO<TModel> = ModelWithoutLogs<TModel> &
   InfinitePaginationDTO;

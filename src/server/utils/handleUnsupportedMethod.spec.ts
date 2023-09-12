@@ -1,7 +1,7 @@
 import { handleUnsupportedMethod } from './handleUnsupportedMethod';
 import { mockNextApiResponse } from '@/lib/mocks/NextApiResponse.mock';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { HttpResponseCodesEnum } from '../enums';
+import { HttpMethodsEnum, HttpResponseCodesEnum } from '../enums';
 import { ApiErrors } from '../constants';
 
 describe('handleUnsupportedMethod', () => {
@@ -24,9 +24,12 @@ describe('handleUnsupportedMethod', () => {
   });
 
   it('should return with message', () => {
+    mockedNextApiRequest.method = HttpMethodsEnum.GET;
+    mockedNextApiRequest.url = '/';
     handleUnsupportedMethod(mockedNextApiRequest, mockedNextApiResponse);
-    expect(mockedNextApiResponseJsonFn).toHaveBeenCalledWith(
-      ApiErrors.METHOD_NOT_ALLOWED,
-    );
+    expect(mockedNextApiResponseJsonFn).toHaveBeenCalledWith({
+      ...ApiErrors.METHOD_NOT_ALLOWED,
+      message: `Method GET not allowed for / endpoint`,
+    });
   });
 });

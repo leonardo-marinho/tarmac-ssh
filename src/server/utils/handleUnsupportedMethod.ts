@@ -1,13 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ApiErrors } from '../constants';
-import { HttpResponseCodesEnum } from '../enums';
+import { HttpMethodsEnum } from '../enums';
 import { ControllerErrorResponseType } from '../types';
+import { UnsupportedMethodException } from '../exceptions/UnsupportedMethod.exception';
+import { handleApiError } from './handleApiError';
 
 export const handleUnsupportedMethod = (
-  _: NextApiRequest,
+  req: NextApiRequest,
   res: NextApiResponse<ControllerErrorResponseType>,
 ): void => {
-  res.status(HttpResponseCodesEnum.METHOD_NOT_ALLOWED).json({
-    ...ApiErrors.METHOD_NOT_ALLOWED,
-  });
+  handleApiError(
+    req,
+    res,
+    new UnsupportedMethodException(req.method as HttpMethodsEnum, req.url),
+  );
 };

@@ -11,7 +11,10 @@
     "format:check": "prettier --check --ignore-path .gitignore .",
     "test": "jest",
     "test:watch": "jest --watch --coverage",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:reset": "prisma migrate reset"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
@@ -33,6 +36,7 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "@testing-library/jest-dom": "^6.1.2",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",

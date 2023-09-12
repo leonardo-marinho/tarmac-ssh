@@ -13,10 +13,7 @@ const customConfig: Config = {
     '^@/(.*)$': '<rootDir>/src/$1',
   },
   preset: 'ts-jest',
-  testPathIgnorePatterns: [
-    // Ignore *enum*
-    // Ignore *constants*
-  ],
+  setupFilesAfterEnv: ['<rootDir>/src/lib/mocks/Prisma.mock.ts'],
 };
 
 module.exports = createJestConfig(customConfig);

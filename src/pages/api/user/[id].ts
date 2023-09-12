@@ -1,15 +1,20 @@
 import UserController from '@/server/controllers/User.controller';
-import { ControllerMethodsEnum } from '@/server/enums';
+import { HttpMethodsEnum } from '@/server/enums';
+import { handleApiError } from '@/server/utils/handleApiError';
 import { handleUnsupportedMethod } from '@/server/utils/handleUnsupportedMethod';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  if (req.method === ControllerMethodsEnum.GET) {
-    return await UserController.getById(req, res);
-  }
+  try {
+    if (req.method === HttpMethodsEnum.GET) {
+      return await UserController.getById(req, res);
+    }
 
-  if (req.method === ControllerMethodsEnum.DELETE) {
-    return await UserController.deleteById(req, res);
+    if (req.method === HttpMethodsEnum.DELETE) {
+      return await UserController.deleteById(req, res);
+    }
+  } catch (error) {
+    return handleApiError(req, res, error as Error);
   }
 
   handleUnsupportedMethod(req, res);
