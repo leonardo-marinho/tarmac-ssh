@@ -2,8 +2,8 @@
 CREATE TABLE "Game" (
     "id" SERIAL NOT NULL,
     "name" TEXT NOT NULL,
-    "created_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "Game_pkey" PRIMARY KEY ("id")
 );
@@ -14,8 +14,8 @@ CREATE TABLE "GameBet" (
     "gameRoundId" INTEGER NOT NULL,
     "userId" INTEGER NOT NULL,
     "contractHash" TEXT NOT NULL,
-    "created_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "GameBet_pkey" PRIMARY KEY ("id")
 );
@@ -24,8 +24,8 @@ CREATE TABLE "GameBet" (
 CREATE TABLE "GameRound" (
     "id" SERIAL NOT NULL,
     "gameId" INTEGER NOT NULL,
-    "created_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "GameRound_pkey" PRIMARY KEY ("id")
 );
@@ -34,8 +34,10 @@ CREATE TABLE "GameRound" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "created_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "accountHash" TEXT NOT NULL,
+    "disabled" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
@@ -46,11 +48,17 @@ CREATE TABLE "UserTransaction" (
     "amount" DOUBLE PRECISION NOT NULL,
     "contractHash" TEXT NOT NULL,
     "userId" INTEGER NOT NULL,
-    "created_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
 
     CONSTRAINT "UserTransaction_pkey" PRIMARY KEY ("id")
 );
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_accountHash_key" ON "User"("accountHash");
 
 -- AddForeignKey
 ALTER TABLE "GameBet" ADD CONSTRAINT "GameBet_gameRoundId_fkey" FOREIGN KEY ("gameRoundId") REFERENCES "GameRound"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

@@ -9,11 +9,11 @@ datasource db {
 }
 
 model Game {
-  id     Int         @id @default(autoincrement())
-  name   String
-  rounds GameRound[]
-  created_at                   DateTime?                      @default(now()) @db.Timestamp(0)
-  updated_at                   DateTime?                      @default(now()) @updatedAt @db.Timestamp(0)
+  id         Int         @id @default(autoincrement())
+  name       String
+  rounds     GameRound[]
+  createdAt DateTime?   @default(now()) @db.Timestamp(0)
+  updatedAt DateTime?   @default(now()) @updatedAt @db.Timestamp(0)
 }
 
 model GameBet {
@@ -23,34 +23,36 @@ model GameBet {
   contractHash String
   gameRound    GameRound @relation(fields: [gameRoundId], references: [id])
   user         User      @relation(fields: [userId], references: [id])
-  created_at                   DateTime?                      @default(now()) @db.Timestamp(0)
-  updated_at                   DateTime?                      @default(now()) @updatedAt @db.Timestamp(0)
+  createdAt   DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime? @default(now()) @updatedAt @db.Timestamp(0)
 }
 
 model GameRound {
-  id     Int       @id @default(autoincrement())
-  gameId Int
-  game   Game      @relation(fields: [gameId], references: [id])
-  bets   GameBet[]
-  created_at                   DateTime?                      @default(now()) @db.Timestamp(0)
-  updated_at                   DateTime?                      @default(now()) @updatedAt @db.Timestamp(0)
+  id         Int       @id @default(autoincrement())
+  gameId     Int
+  game       Game      @relation(fields: [gameId], references: [id])
+  bets       GameBet[]
+  createdAt DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt DateTime? @default(now()) @updatedAt @db.Timestamp(0)
 }
 
 model User {
   id              Int               @id @default(autoincrement())
-  username        String
+  username        String @unique
+  accountHash     String @unique
+  disabled        Boolean           @default(false)
   GameBet         GameBet[]
   UserTransaction UserTransaction[]
-  created_at                   DateTime?                      @default(now()) @db.Timestamp(0)
-  updated_at                   DateTime?                      @default(now()) @updatedAt @db.Timestamp(0)
+  createdAt      DateTime?         @default(now()) @db.Timestamp(0)
+  updatedAt      DateTime?         @default(now()) @updatedAt @db.Timestamp(0)
 }
 
 model UserTransaction {
-  id           Int    @id @default(autoincrement())
+  id           Int       @id @default(autoincrement())
   amount       Float
   contractHash String
   userId       Int
-  user         User   @relation(fields: [userId], references: [id])
-  created_at                   DateTime?                      @default(now()) @db.Timestamp(0)
-  updated_at                   DateTime?                      @default(now()) @updatedAt @db.Timestamp(0)
+  user         User      @relation(fields: [userId], references: [id])
+  createdAt   DateTime? @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime? @default(now()) @updatedAt @db.Timestamp(0)
 }

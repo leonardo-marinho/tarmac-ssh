@@ -1,0 +1,35 @@
+export enum HttpMethodsEnum {
+  DELETE = 'DELETE',
+  GET = 'GET',
+  PATCH = 'PATCH',
+  POST = 'POST',
+  PUT = 'PUT',
+}
+
+export enum HttpResponseCodesNamesEnum {
+  BAD_REQUEST = 'BAD_REQUEST',
+  CREATED = 'CREATED',
+  FORBIDDEN = 'FORBIDDEN',
+  INTERNAL_SERVER_ERROR = 'INTERNAL_SERVER_ERROR',
+  METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED',
+  NOT_FOUND = 'NOT_FOUND',
+  OK = 'OK',
+  UNAUTHORIZED = 'UNAUTHORIZED',
+}
+
+export enum HttpResponseCodesEnum {
+  BAD_REQUEST = 400,
+  CREATED = 201,
+  FORBIDDEN = 403,
+  INTERNAL_SERVER_ERROR = 500,
+  METHOD_NOT_ALLOWED = 405,
+  NOT_FOUND = 404,
+  OK = 200,
+  UNAUTHORIZED = 401,
+}
+
+export enum PrismaErrorsEnum {
+  RECORD_NOT_FOUND = 'P2025',
+  UNIQUE_CONSTRAINT_VALIDATION = 'P2002',
+  UNKNOWN = 'P-1',
+}
