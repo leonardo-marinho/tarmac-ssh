@@ -2,7 +2,7 @@ import { Prisma, User } from '@prisma/client';
 import { InfinitePaginationType } from '../types';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { CreateUserDTO } from '@/lib/models/dto/CreateUser.dto';
-import prisma from '@/lib/prisma';
+import prisma from '@/lib/database/client';
 import { HttpResponseCodesEnum } from '../enums';
 import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
 import { createUserDtoSchema } from '@/lib/validations/CreateUserDto.schema';
