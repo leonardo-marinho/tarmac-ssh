@@ -129,7 +129,7 @@ describe('resolveBulkArgs', () => {
           name: 'Alex',
         },
         {
-          id: '4',
+          id: 4,
         },
         {
           region: 'en-US',
@@ -160,19 +160,70 @@ describe('resolveBulkArgs', () => {
           name: 'Alex',
         },
         {
-          id: '4',
+          id: 4,
         },
         {
-          id: '5',
+          id: 5,
         },
         {
-          id: '6',
+          id: 6,
         },
         {
           region: 'en-US',
         },
         {
           region: 'en-GB',
+        },
+      ],
+    });
+  });
+
+  it('should parseInt string numbers', () => {
+    expect(
+      resolveBulkArgs([
+        {
+          key: 'id',
+          value: '4.342,5,-6',
+        },
+      ]),
+    ).toEqual({
+      OR: [
+        {
+          id: 4.342,
+        },
+        {
+          id: 5,
+        },
+        {
+          id: -6,
+        },
+      ],
+    });
+  });
+
+  it('should parseInt and object string numbers', () => {
+    expect(
+      resolveBulkArgs<{ id: number; num: number }>(
+        [
+          {
+            key: 'id',
+            value: '4,5,6',
+          },
+        ],
+        {
+          num: '1',
+        },
+      ),
+    ).toEqual({
+      OR: [
+        {
+          id: 4,
+        },
+        {
+          id: 5,
+        },
+        {
+          id: 6,
         },
       ],
     });
