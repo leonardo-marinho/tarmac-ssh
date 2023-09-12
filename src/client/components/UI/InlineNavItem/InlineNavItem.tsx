@@ -8,7 +8,7 @@ const InlineNavItem: FC<InlineNavItemProps> = ({ children, ...htmlProps }) => {
     <li
       {...htmlProps}
       className={classNames(
-        `text-neutral-500 font-light text-base cursor-pointer hover:text-neutral-200`,
+        `cursor-pointer text-base font-light text-neutral-500 hover:text-neutral-200`,
         htmlProps.className,
       )}
     >
