@@ -3,10 +3,12 @@ import { CreateUserDTO } from '@/lib/models/dto/CreateUser.dto';
 import { GetManyUserDTO } from '@/lib/models/dto/GetManyUser.dto';
 import { HashDTO } from '@/lib/models/dto/Hash.dto';
 import { IdDTO } from '@/lib/models/dto/Id.dto';
+import { UpdateUserDTO } from '@/lib/models/dto/UpdateUser.dto';
 import { createUserDtoSchema } from '@/lib/validations/CreateUserDto.schema';
 import { getManyUserDtoSchema } from '@/lib/validations/GetManyUserDto.schema';
 import { hashDtoSchema } from '@/lib/validations/HashDto.schema';
 import { idDtoSchema } from '@/lib/validations/IdDto.schema';
+import { updateUserDtoSchema } from '@/lib/validations/UpdateUserDto.schema';
 import { resolveBulkArgs } from '@/server/utils/resolveBulkArgs';
 import { resolvePrismaPaginationArgs } from '@/server/utils/resolvePrismaPaginationArgs';
 import { Prisma, User } from '@prisma/client';
@@ -16,6 +18,7 @@ import { HttpResponseCodesEnum } from '../enums';
 import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
 import { NotFoundException } from '../exceptions/NotFound.exception';
 import { InfinitePaginationType } from '../types';
+import { handlePrismaError } from '../utils/handlePrismaError';
 import { resolveInfinitePagination } from '../utils/resolveInfinitePagination';
 import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
 import { validateSchema } from '../utils/validateSchema';
@@ -116,6 +119,37 @@ class UserController {
     res
       .status(HttpResponseCodesEnum.OK)
       .json(resolveInfinitePaginationResponse(response, pagination));
+  }
+
+  async updateUser(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const body: UpdateUserDTO = req.body;
+    validateSchema<UpdateUserDTO>(updateUserDtoSchema, body);
+
+    const query: IdDTO = req.query;
+    validateSchema<IdDTO>(idDtoSchema, query);
+
+    let response: null | User = null;
+
+    try {
+      response = await prisma.user.update({
+        data: {
+          accountHash: body.accountHash,
+          disabled: body.disabled,
+          username: body.username,
+        },
+        where: {
+          id: Number(query.id),
+        },
+      });
+    } catch (error) {
+      handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
+    }
+
+    if (!response) {
+      throw new InternalServerErrorException('Record could not be updated');
+    }
+
+    res.status(HttpResponseCodesEnum.OK).json(response);
   }
 }
 
