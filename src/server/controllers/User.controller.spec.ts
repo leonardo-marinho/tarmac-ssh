@@ -9,6 +9,7 @@ import { HttpResponseCodesEnum } from '../enums';
 import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
 import { NotFoundException } from '../exceptions/NotFound.exception';
 import { ValidationException } from '../exceptions/Validation.exception';
+import { handlePrismaError } from '../utils/handlePrismaError';
 import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
 import UserController from './User.controller';
 
@@ -17,7 +18,13 @@ jest.mock('@/server/utils/handleApiError', () => ({
   handleApiError: jest.fn(),
 }));
 
+jest.mock('../utils/handlePrismaError', () => ({
+  __esModule: true,
+  handlePrismaError: jest.fn(),
+}));
+
 describe('User controller', () => {
+  const mockedHandlePrismaError = handlePrismaError as unknown as jest.Mock;
   const mockedResponseStatusFn = jest.fn();
   let mockedNextApiRequest: NextApiRequest;
   let mockedNextApiResponse: NextApiResponse;
@@ -190,6 +197,36 @@ describe('User controller', () => {
         await UserController.getById(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('updateUser', () => {
+    beforeEach(() => {
+      mockedNextApiRequest.body = {
+        accountHash: '0xabc123',
+      };
+      mockedNextApiRequest.query = {
+        id: '1',
+      };
+    });
+
+    it('should send status 200 and user as response', async () => {
+      const mockedUser = mockUser();
+      prismaMock.user.update.mockImplementation(jest.fn().mockReturnValue(mockedUser));
+      await UserController.updateUser(mockedNextApiRequest, mockedNextApiResponse);
+      expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
+      expect(mockedResponseStatusFn).toHaveBeenCalledWith(mockedUser);
+    });
+
+    it('should send call handlePrismaError if prisma throws error', async () => {
+      try {
+        prismaMock.user.update.mockImplementation(() => {
+          throw new Error();
+        });
+        await UserController.updateUser(mockedNextApiRequest, mockedNextApiResponse);
+      } catch (error) {
+        expect(mockedHandlePrismaError).toHaveBeenCalled();
       }
     });
   });
