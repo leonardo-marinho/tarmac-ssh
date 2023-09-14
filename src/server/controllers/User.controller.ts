@@ -21,6 +21,7 @@ import { InfinitePaginationType } from '../types';
 import { handlePrismaError } from '../utils/handlePrismaError';
 import { resolveInfinitePagination } from '../utils/resolveInfinitePagination';
 import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
+import { resolvePrismaBooleanArg } from '../utils/resolvePrismaBooleanArg';
 import { validateSchema } from '../utils/validateSchema';
 
 class UserController {
@@ -28,15 +29,23 @@ class UserController {
     const body: CreateUserDTO = req.body;
     validateSchema<CreateUserDTO>(createUserDtoSchema, body);
 
-    const response = await prisma.user.create({
-      data: {
-        accountHash: body.accountHash,
-        username: body.username,
-      },
-    });
+    let response: null | User = null;
+
+    try {
+      response = await prisma.user.create({
+        data: {
+          accountHash: body.accountHash,
+          username: body.username,
+        },
+      });
+    } catch (error) {
+      handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
+    }
 
     if (!response) {
-      throw new InternalServerErrorException('User could not be created');
+      throw new InternalServerErrorException(
+        `User, with hash ${body.accountHash}, could not be created`,
+      );
     }
 
     res.status(HttpResponseCodesEnum.CREATED).json(resolveInfinitePaginationResponse(response));
@@ -46,11 +55,17 @@ class UserController {
     const query: IdDTO = req.query;
     validateSchema<IdDTO>(idDtoSchema, query);
 
-    const response: null | User = await prisma.user.delete({
-      where: {
-        id: Number(query.id),
-      },
-    });
+    let response: null | User = null;
+
+    try {
+      response = await prisma.user.delete({
+        where: {
+          id: Number(query.id),
+        },
+      });
+    } catch (error) {
+      handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
+    }
 
     if (!response) {
       throw new NotFoundException(`User, with id ${query.id}, not found`);
@@ -63,11 +78,17 @@ class UserController {
     const query: HashDTO = req.query;
     validateSchema<HashDTO>(hashDtoSchema, query);
 
-    const response: null | User = await prisma.user.findUnique({
-      where: {
-        accountHash: query.hash,
-      },
-    });
+    let response: null | User = null;
+
+    try {
+      response = await prisma.user.findUnique({
+        where: {
+          accountHash: query.hash,
+        },
+      });
+    } catch (error) {
+      handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
+    }
 
     if (!response) {
       throw new NotFoundException(`User, with hash ${query.hash}, not found`);
@@ -80,11 +101,17 @@ class UserController {
     const query: IdDTO = req.query;
     validateSchema<IdDTO>(idDtoSchema, query);
 
-    const response: null | User = await prisma.user.findUnique({
-      where: {
-        id: Number(query.id),
-      },
-    });
+    let response: null | User = null;
+
+    try {
+      response = await prisma.user.findUnique({
+        where: {
+          id: Number(query.id),
+        },
+      });
+    } catch (error) {
+      handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
+    }
 
     if (!response) {
       throw new NotFoundException(`User, with id ${query.id}, not found`);
@@ -94,27 +121,39 @@ class UserController {
   }
 
   async getMany(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const query: GetManyUserDTO = req.query as unknown as GetManyUserDTO;
-    const pagination: InfinitePaginationType = resolveInfinitePagination(req.query);
+    const query: GetManyUserDTO = req.query;
     validateSchema<GetManyUserDTO>(getManyUserDtoSchema, query);
 
-    const response = await prisma.user.findMany({
-      where: resolveBulkArgs<Prisma.UserWhereInput>([
-        {
-          key: 'id',
-          value: query?.ids,
-        },
-        {
-          key: 'username',
-          value: query?.usernames,
-        },
-        {
-          key: 'accountHash',
-          value: query?.accountHashes,
-        },
-      ]),
-      ...resolvePrismaPaginationArgs(pagination),
-    });
+    const pagination: InfinitePaginationType = resolveInfinitePagination(req.query);
+
+    let response: User[] = [];
+
+    try {
+      response = await prisma.user.findMany({
+        where: resolveBulkArgs<Prisma.UserWhereInput>(
+          [
+            {
+              key: 'id',
+              value: query?.ids,
+            },
+            {
+              key: 'username',
+              value: query?.usernames,
+            },
+            {
+              key: 'accountHash',
+              value: query?.accountHashes,
+            },
+          ],
+          {
+            disabled: resolvePrismaBooleanArg(query?.disabled),
+          },
+        ),
+        ...resolvePrismaPaginationArgs(pagination),
+      });
+    } catch (error) {
+      handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
+    }
 
     res
       .status(HttpResponseCodesEnum.OK)
@@ -146,7 +185,7 @@ class UserController {
     }
 
     if (!response) {
-      throw new InternalServerErrorException('Record could not be updated');
+      throw new NotFoundException(`User, with id ${query.id}, could not be updated`);
     }
 
     res.status(HttpResponseCodesEnum.OK).json(response);

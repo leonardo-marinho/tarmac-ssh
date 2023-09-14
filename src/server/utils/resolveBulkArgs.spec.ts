@@ -2,7 +2,7 @@ import { resolveBulkArgs } from './resolveBulkArgs';
 
 describe('resolveBulkArgs', () => {
   it('should resolve empty array', () => {
-    expect(resolveBulkArgs([])).toBeUndefined();
+    expect(resolveBulkArgs([])).toStrictEqual({});
   });
 
   it('should resolve undefined value', () => {
@@ -13,18 +13,7 @@ describe('resolveBulkArgs', () => {
           value: undefined,
         },
       ]),
-    ).toBeUndefined();
-  });
-
-  it('should resolve undefined value', () => {
-    expect(
-      resolveBulkArgs([
-        {
-          key: 'name',
-          value: undefined,
-        },
-      ]),
-    ).toBeUndefined();
+    ).toStrictEqual({});
   });
 
   it('should resolve many values without black space after comma', () => {
@@ -211,21 +200,34 @@ describe('resolveBulkArgs', () => {
           },
         ],
         {
-          num: '1',
+          num: 1,
         },
       ),
-    ).toEqual({
+    ).toStrictEqual({
       OR: [
         {
           id: 4,
+          num: 1,
         },
         {
           id: 5,
+          num: 1,
         },
         {
           id: 6,
+          num: 1,
         },
       ],
+    });
+  });
+
+  it('should return andArgs if no bulkSearchArgs are provided', () => {
+    expect(
+      resolveBulkArgs<{ id: number; num: number }>([], {
+        num: 1,
+      }),
+    ).toStrictEqual({
+      num: 1,
     });
   });
 });
