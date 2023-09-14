@@ -5,7 +5,7 @@ import { NotFoundException } from '../exceptions/NotFound.exception';
 import { NotTreatedException } from '../exceptions/NotTreated.exception';
 
 const formatPrismaErrorMessage = (message: string): string => {
-  return message.replaceAll('\n', '');
+  return message.replaceAll(/\n/g, '').replaceAll(/ +/g, ' ');
 };
 
 export const handlePrismaError = (error: PrismaClientKnownRequestError): never => {

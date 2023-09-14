@@ -1,8 +1,11 @@
-import { object, string } from 'yup';
+import { boolean, object } from 'yup';
 
 import { CreateUserDTO } from '../models/dto/CreateUser.dto';
+import { yupHashValueType } from './types/HashValueType.yup';
+import { yupUsernameValueType } from './types/UsernameValueType.yup';
 
 export const createUserDtoSchema = object<CreateUserDTO>({
-  accountHash: string().required(),
-  username: string().required().min(3).max(20),
+  accountHash: yupHashValueType.required(),
+  disabled: boolean(),
+  username: yupUsernameValueType,
 });

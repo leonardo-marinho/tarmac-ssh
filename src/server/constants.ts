@@ -45,3 +45,6 @@ export const ApiErrors: Record<ApiErrorNamesType, Omit<ControllerErrorResponseTy
 };
 
 export const DEFAULT_ITEMS_PER_PAGE = 20;
+
+export const MAX_ITEMS_PER_PAGE = 100;
+export const MIN_ITEMS_PER_PAGE = 1;
