@@ -142,7 +142,6 @@ class UserController {
         },
       });
     } catch (error) {
-      console.error('blblalallala');
       handlePrismaError(error as Prisma.PrismaClientKnownRequestError);
     }
 
