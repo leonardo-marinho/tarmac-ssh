@@ -3,6 +3,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ApiErrors } from '../constants';
 import { HttpResponseCodesEnum } from '../enums';
 import { NotFoundException } from '../exceptions/NotFound.exception';
+import { NotTreatedException } from '../exceptions/NotTreated.exception';
 import { UnsupportedMethodException } from '../exceptions/UnsupportedMethod.exception';
 import { ValidationException } from '../exceptions/Validation.exception';
 import { ControllerErrorResponseType } from '../types';
@@ -27,6 +28,11 @@ export const handleApiError = (
   } else if (error instanceof NotFoundException) {
     res.status(HttpResponseCodesEnum.NOT_FOUND).json({
       ...ApiErrors.NOT_FOUND,
+      message,
+    });
+  } else if (error instanceof NotTreatedException) {
+    res.status(HttpResponseCodesEnum.INTERNAL_SERVER_ERROR).json({
+      ...ApiErrors.NOT_TREATED,
       message,
     });
   } else {
