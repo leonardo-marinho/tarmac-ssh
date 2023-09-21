@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { HttpMethodsEnum } from '@/server/enums';
 import { handleApiError } from '@/server/utils/handleApiError';
 import { handleUnsupportedMethod } from '@/server/utils/handleUnsupportedMethod';
-import UserTransactionController from "@/server/controllers/UserTransaction.controller";
+import UserTransactionController from '@/server/controllers/UserTransaction.controller';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
