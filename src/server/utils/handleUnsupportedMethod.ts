@@ -1,8 +1,8 @@
+import { HttpMethodsEnum } from '@/server/enums';
+import { UnsupportedMethodException } from '@/server/exceptions/UnsupportedMethod.exception';
+import { ControllerErrorResponseType } from '@/server/types';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { HttpMethodsEnum } from '../enums';
-import { UnsupportedMethodException } from '../exceptions/UnsupportedMethod.exception';
-import { ControllerErrorResponseType } from '../types';
 import { handleApiError } from './handleApiError';
 
 export const handleUnsupportedMethod = (

@@ -1,6 +1,5 @@
+import { ValidationException } from '@/server/exceptions/Validation.exception';
 import { AnyObject, ObjectSchema, ValidationError } from 'yup';
-
-import { ValidationException } from '../exceptions/Validation.exception';
 
 export const validateSchema = <TDto>(schema: ObjectSchema<AnyObject>, data: TDto) => {
   try {

@@ -1,8 +1,8 @@
 import { mockNextApiResponse } from '@/lib/mocks/NextApiResponse.mock';
+import { ApiErrors } from '@/server/constants';
+import { HttpMethodsEnum, HttpResponseCodesEnum } from '@/server/enums';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { ApiErrors } from '../constants';
-import { HttpMethodsEnum, HttpResponseCodesEnum } from '../enums';
 import { handleUnsupportedMethod } from './handleUnsupportedMethod';
 
 describe('handleUnsupportedMethod', () => {

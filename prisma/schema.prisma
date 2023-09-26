@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model Game {
@@ -39,7 +38,7 @@ model GameRound {
 model User {
   id              Int               @id @default(autoincrement())
   username        String @unique
-  accountHash     String @unique
+  hash     String @unique
   disabled        Boolean           @default(false)
   GameBet         GameBet[]
   UserTransaction UserTransaction[]
@@ -50,7 +49,7 @@ model User {
 model UserTransaction {
   id           Int       @id @default(autoincrement())
   amount       Float
-  contractHash String
+  hash String
   userId       Int
   user         User      @relation(fields: [userId], references: [id])
   createdAt   DateTime? @default(now()) @db.Timestamp(0)

@@ -1,5 +1,5 @@
-import { DEFAULT_ITEMS_PER_PAGE } from '../constants';
-import { InfinitePaginationDTO, InfinitePaginationType } from '../types';
+import { DEFAULT_ITEMS_PER_PAGE } from '@/server/constants';
+import { InfinitePaginationDTO, InfinitePaginationType } from '@/server/types';
 
 export const resolveInfinitePagination = (raw: InfinitePaginationDTO): InfinitePaginationType => {
   const page = Number(raw.page) || 1;

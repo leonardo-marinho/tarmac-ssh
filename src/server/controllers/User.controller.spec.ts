@@ -2,14 +2,14 @@ import { mockNextApiRequest } from '@/lib/mocks/NextApiRequest.mock';
 import { mockNextApiResponse } from '@/lib/mocks/NextApiResponse.mock';
 import { prismaMock } from '@/lib/mocks/Prisma.mock';
 import { mockUser } from '@/lib/mocks/User.mock';
-import { CreateUserDTO } from '@/lib/models/dto/CreateUser.dto';
+import { CreateUserArgs } from '@/lib/models/dto/CreateUserArgs.dto';
+import { HttpResponseCodesEnum } from '@/server/enums';
+import { InternalServerErrorException } from '@/server/exceptions/InternalServerError.exception';
+import { NotFoundException } from '@/server/exceptions/NotFound.exception';
+import { ValidationException } from '@/server/exceptions/Validation.exception';
+import { resolveInfinitePaginationResponse } from '@/server/utils/resolveInfinitePaginationResponse';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { HttpResponseCodesEnum } from '../enums';
-import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
-import { NotFoundException } from '../exceptions/NotFound.exception';
-import { ValidationException } from '../exceptions/Validation.exception';
-import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
 import UserController from './User.controller';
 
 jest.mock('@/server/utils/handleApiError', () => ({
@@ -29,13 +29,16 @@ describe('User controller', () => {
   });
 
   describe('create', () => {
+    beforeEach(() => {
+      mockedNextApiRequest.body = {
+        hash: 'hash',
+        username: 'username',
+      } as CreateUserArgs;
+    });
+
     it('should send status 201 and user as response', async () => {
       const mockedUser = mockUser();
       prismaMock.user.create.mockImplementation(jest.fn().mockReturnValue(mockedUser));
-      mockedNextApiRequest.body = {
-        accountHash: 'accountHash',
-        username: 'username',
-      } as CreateUserDTO;
       await UserController.create(mockedNextApiRequest, mockedNextApiResponse);
       expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.CREATED);
       expect(mockedResponseStatusFn).toHaveBeenCalledWith(
@@ -44,8 +47,8 @@ describe('User controller', () => {
     });
 
     it('should throw error for invalid body', async () => {
+      mockedNextApiRequest.body = {} as CreateUserArgs;
       try {
-        mockedNextApiRequest.body = {} as CreateUserDTO;
         await UserController.create(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationException);
@@ -54,10 +57,6 @@ describe('User controller', () => {
 
     it('should throw error if fails to create user', async () => {
       try {
-        mockedNextApiRequest.body = {
-          accountHash: 'accountHash',
-          username: 'username',
-        } as CreateUserDTO;
         await UserController.create(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(InternalServerErrorException);
@@ -66,12 +65,15 @@ describe('User controller', () => {
   });
 
   describe('deleteById', () => {
-    it('should send status 200 and user as response', async () => {
-      const mockedUser = mockUser();
-      prismaMock.user.delete.mockImplementation(jest.fn().mockReturnValue(mockedUser));
+    beforeEach(() => {
       mockedNextApiRequest.query = {
         id: '1',
       };
+    });
+
+    it('should send status 200 and user as response', async () => {
+      const mockedUser = mockUser();
+      prismaMock.user.delete.mockImplementation(jest.fn().mockReturnValue(mockedUser));
       await UserController.deleteById(mockedNextApiRequest, mockedNextApiResponse);
       expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
       expect(mockedResponseStatusFn).toHaveBeenCalledWith(
@@ -80,8 +82,8 @@ describe('User controller', () => {
     });
 
     it('should throw error for invalid query', async () => {
+      mockedNextApiRequest.query = {};
       try {
-        mockedNextApiRequest.query = {};
         await UserController.deleteById(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationException);
@@ -90,9 +92,6 @@ describe('User controller', () => {
 
     it('should throw error if fails to delete user', async () => {
       try {
-        mockedNextApiRequest.query = {
-          id: '1',
-        };
         await UserController.deleteById(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
@@ -101,12 +100,15 @@ describe('User controller', () => {
   });
 
   describe('getMany', () => {
-    it('should send status 200 and users as response', async () => {
-      const mockedUser = mockUser();
-      prismaMock.user.findMany.mockImplementation(jest.fn().mockReturnValue([mockedUser]));
+    beforeEach(() => {
       mockedNextApiRequest.query = {
         ids: '1',
       };
+    });
+
+    it('should send status 200 and users as response', async () => {
+      const mockedUser = mockUser();
+      prismaMock.user.findMany.mockImplementation(jest.fn().mockReturnValue([mockedUser]));
       await UserController.getMany(mockedNextApiRequest, mockedNextApiResponse);
       expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
       expect(mockedResponseStatusFn).toHaveBeenCalledWith(
@@ -115,8 +117,8 @@ describe('User controller', () => {
     });
 
     it('should throw error for invalid query', async () => {
+      mockedNextApiRequest.query = {};
       try {
-        mockedNextApiRequest.query = {};
         await UserController.getMany(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationException);
@@ -125,12 +127,15 @@ describe('User controller', () => {
   });
 
   describe('getByHash', () => {
-    it('should send status 200 and user as response', async () => {
-      const mockedUser = mockUser();
-      prismaMock.user.findUnique.mockImplementation(jest.fn().mockReturnValue(mockedUser));
+    beforeEach(() => {
       mockedNextApiRequest.query = {
         hash: 'hash',
       };
+    });
+
+    it('should send status 200 and user as response', async () => {
+      const mockedUser = mockUser();
+      prismaMock.user.findUnique.mockImplementation(jest.fn().mockReturnValue(mockedUser));
       await UserController.getByHash(mockedNextApiRequest, mockedNextApiResponse);
       expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
       expect(mockedResponseStatusFn).toHaveBeenCalledWith(
@@ -149,9 +154,6 @@ describe('User controller', () => {
 
     it('should throw error if fails to find user', async () => {
       try {
-        mockedNextApiRequest.query = {
-          hash: 'hash',
-        };
         await UserController.getByHash(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
@@ -160,12 +162,15 @@ describe('User controller', () => {
   });
 
   describe('getById', () => {
-    it('should send status 200 and user as response', async () => {
-      const mockedUser = mockUser();
-      prismaMock.user.findUnique.mockImplementation(jest.fn().mockReturnValue(mockedUser));
+    beforeEach(() => {
       mockedNextApiRequest.query = {
         id: '1',
       };
+    });
+
+    it('should send status 200 and user as response', async () => {
+      const mockedUser = mockUser();
+      prismaMock.user.findUnique.mockImplementation(jest.fn().mockReturnValue(mockedUser));
       await UserController.getById(mockedNextApiRequest, mockedNextApiResponse);
       expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
       expect(mockedResponseStatusFn).toHaveBeenCalledWith(
@@ -174,8 +179,8 @@ describe('User controller', () => {
     });
 
     it('should throw error for invalid query', async () => {
+      mockedNextApiRequest.query = {};
       try {
-        mockedNextApiRequest.query = {};
         await UserController.getById(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationException);
@@ -184,13 +189,29 @@ describe('User controller', () => {
 
     it('should throw error if fails to find user', async () => {
       try {
-        mockedNextApiRequest.query = {
-          id: '1',
-        };
         await UserController.getById(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
+    });
+  });
+
+  describe('updateUser', () => {
+    beforeEach(() => {
+      mockedNextApiRequest.body = {
+        hash: '0xabc123',
+      };
+      mockedNextApiRequest.query = {
+        id: '1',
+      };
+    });
+
+    it('should send status 200 and user as response', async () => {
+      const mockedUser = mockUser();
+      prismaMock.user.update.mockImplementation(jest.fn().mockReturnValue(mockedUser));
+      await UserController.updateUser(mockedNextApiRequest, mockedNextApiResponse);
+      expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
+      expect(mockedResponseStatusFn).toHaveBeenCalledWith(mockedUser);
     });
   });
 });

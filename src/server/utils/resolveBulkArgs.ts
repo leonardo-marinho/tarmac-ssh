@@ -1,12 +1,9 @@
-import { keys } from 'lodash';
+import { KeyValuePair } from '@/server/types';
 
 export const resolveBulkArgs = <TWhere>(
-  args: { key: keyof TWhere; value: string | undefined }[],
-  and: { [key: string]: string } = {},
-): { OR: TWhere[] } | undefined => {
-  const resolvedANDArgs: { [key: string]: string } = {};
-  keys(and).map((key) => ({ [key]: Number.isNaN(Number(and[key])) ? and[key] : Number(and[key]) }));
-
+  args: KeyValuePair<keyof TWhere, string | undefined>[],
+  andArgs: Partial<TWhere> = {},
+): { OR: TWhere[] } | Partial<TWhere> => {
   const resolvedArgs = args
     .filter((arg) => arg.value !== undefined)
     .filter((arg) => arg.value!.trim() !== '')
@@ -14,8 +11,8 @@ export const resolveBulkArgs = <TWhere>(
     .flat()
     .map(({ key, value }) => ({
       [key]: Number.isNaN(Number(value)) ? value : Number(value),
-      ...resolvedANDArgs,
+      ...andArgs,
     })) as TWhere[];
 
-  return resolvedArgs.length > 0 ? { OR: resolvedArgs } : undefined;
+  return resolvedArgs.length > 0 ? { OR: resolvedArgs } : { ...andArgs };
 };

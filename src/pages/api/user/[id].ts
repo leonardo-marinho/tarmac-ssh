@@ -14,6 +14,10 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (req.method === HttpMethodsEnum.DELETE) {
       return await UserController.deleteById(req, res);
     }
+
+    if (req.method === HttpMethodsEnum.PATCH) {
+      return await UserController.updateUser(req, res);
+    }
   } catch (error) {
     return handleApiError(req, res, error as Error);
   }

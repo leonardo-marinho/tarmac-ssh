@@ -27,6 +27,11 @@ export const ApiErrors: Record<ApiErrorNamesType, Omit<ControllerErrorResponseTy
     httpResponseCode: HttpResponseCodesEnum.NOT_FOUND,
     name: 'Not found',
   },
+  NOT_TREATED: {
+    code: 'NOT_TREATED',
+    httpResponseCode: HttpResponseCodesEnum.INTERNAL_SERVER_ERROR,
+    name: 'Not treated error',
+  },
   UNAUTHORIZED: {
     code: HttpResponseCodesNamesEnum.UNAUTHORIZED,
     httpResponseCode: HttpResponseCodesEnum.UNAUTHORIZED,
@@ -40,3 +45,6 @@ export const ApiErrors: Record<ApiErrorNamesType, Omit<ControllerErrorResponseTy
 };
 
 export const DEFAULT_ITEMS_PER_PAGE = 20;
+
+export const MAX_ITEMS_PER_PAGE = 100;
+export const MIN_ITEMS_PER_PAGE = 1;
