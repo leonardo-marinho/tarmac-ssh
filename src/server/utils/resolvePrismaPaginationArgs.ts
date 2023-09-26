@@ -1,4 +1,4 @@
-import { InfinitePaginationType } from '../types';
+import { InfinitePaginationType } from '@/server/types';
 
 export const resolvePrismaPaginationArgs = (pagination: InfinitePaginationType) => {
   return {

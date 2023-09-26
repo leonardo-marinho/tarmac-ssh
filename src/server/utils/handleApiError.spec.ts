@@ -1,12 +1,12 @@
 import { mockNextApiRequest } from '@/lib/mocks/NextApiRequest.mock';
 import { mockNextApiResponse } from '@/lib/mocks/NextApiResponse.mock';
+import { HttpMethodsEnum, HttpResponseCodesEnum } from '@/server/enums';
+import { NotFoundException } from '@/server/exceptions/NotFound.exception';
+import { NotTreatedException } from '@/server/exceptions/NotTreated.exception';
+import { UnsupportedMethodException } from '@/server/exceptions/UnsupportedMethod.exception';
+import { ValidationException } from '@/server/exceptions/Validation.exception';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { HttpMethodsEnum, HttpResponseCodesEnum } from '../enums';
-import { NotFoundException } from '../exceptions/NotFound.exception';
-import { NotTreatedException } from '../exceptions/NotTreated.exception';
-import { UnsupportedMethodException } from '../exceptions/UnsupportedMethod.exception';
-import { ValidationException } from '../exceptions/Validation.exception';
 import { handleApiError } from './handleApiError';
 
 describe('handleApiError', () => {

@@ -1,5 +1,7 @@
-export const resolveBulkArgs = <TWhere extends { [key: string]: unknown }>(
-  args: { key: keyof TWhere; value: string | undefined }[],
+import { KeyValuePair } from '@/server/types';
+
+export const resolveBulkArgs = <TWhere>(
+  args: KeyValuePair<keyof TWhere, string | undefined>[],
   andArgs: Partial<TWhere> = {},
 ): { OR: TWhere[] } | Partial<TWhere> => {
   const resolvedArgs = args

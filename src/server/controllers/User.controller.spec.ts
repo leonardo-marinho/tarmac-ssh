@@ -2,15 +2,14 @@ import { mockNextApiRequest } from '@/lib/mocks/NextApiRequest.mock';
 import { mockNextApiResponse } from '@/lib/mocks/NextApiResponse.mock';
 import { prismaMock } from '@/lib/mocks/Prisma.mock';
 import { mockUser } from '@/lib/mocks/User.mock';
-import { CreateUserDTO } from '@/lib/models/dto/CreateUser.dto';
+import { CreateUserArgs } from '@/lib/models/dto/CreateUserArgs.dto';
+import { HttpResponseCodesEnum } from '@/server/enums';
+import { InternalServerErrorException } from '@/server/exceptions/InternalServerError.exception';
+import { NotFoundException } from '@/server/exceptions/NotFound.exception';
+import { ValidationException } from '@/server/exceptions/Validation.exception';
+import { resolveInfinitePaginationResponse } from '@/server/utils/resolveInfinitePaginationResponse';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { HttpResponseCodesEnum } from '../enums';
-import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
-import { NotFoundException } from '../exceptions/NotFound.exception';
-import { ValidationException } from '../exceptions/Validation.exception';
-import { handlePrismaError } from '../utils/handlePrismaError';
-import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
 import UserController from './User.controller';
 
 jest.mock('@/server/utils/handleApiError', () => ({
@@ -18,13 +17,7 @@ jest.mock('@/server/utils/handleApiError', () => ({
   handleApiError: jest.fn(),
 }));
 
-jest.mock('../utils/handlePrismaError', () => ({
-  __esModule: true,
-  handlePrismaError: jest.fn(),
-}));
-
 describe('User controller', () => {
-  const mockedHandlePrismaError = handlePrismaError as unknown as jest.Mock;
   const mockedResponseStatusFn = jest.fn();
   let mockedNextApiRequest: NextApiRequest;
   let mockedNextApiResponse: NextApiResponse;
@@ -38,9 +31,9 @@ describe('User controller', () => {
   describe('create', () => {
     beforeEach(() => {
       mockedNextApiRequest.body = {
-        accountHash: 'accountHash',
+        hash: 'hash',
         username: 'username',
-      } as CreateUserDTO;
+      } as CreateUserArgs;
     });
 
     it('should send status 201 and user as response', async () => {
@@ -54,7 +47,7 @@ describe('User controller', () => {
     });
 
     it('should throw error for invalid body', async () => {
-      mockedNextApiRequest.body = {} as CreateUserDTO;
+      mockedNextApiRequest.body = {} as CreateUserArgs;
       try {
         await UserController.create(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
@@ -67,18 +60,6 @@ describe('User controller', () => {
         await UserController.create(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(InternalServerErrorException);
-      }
-    });
-
-    it('should send call handlePrismaError if prisma throws error', async () => {
-      prismaMock.user.create.mockImplementation(() => {
-        throw new Error();
-      });
-
-      try {
-        await UserController.create(mockedNextApiRequest, mockedNextApiResponse);
-      } catch (error) {
-        expect(mockedHandlePrismaError).toHaveBeenCalled();
       }
     });
   });
@@ -116,18 +97,6 @@ describe('User controller', () => {
         expect(error).toBeInstanceOf(NotFoundException);
       }
     });
-
-    it('should send call handlePrismaError if prisma throws error', async () => {
-      prismaMock.user.delete.mockImplementation(() => {
-        throw new Error();
-      });
-
-      try {
-        await UserController.deleteById(mockedNextApiRequest, mockedNextApiResponse);
-      } catch (error) {
-        expect(mockedHandlePrismaError).toHaveBeenCalled();
-      }
-    });
   });
 
   describe('getMany', () => {
@@ -153,18 +122,6 @@ describe('User controller', () => {
         await UserController.getMany(mockedNextApiRequest, mockedNextApiResponse);
       } catch (error) {
         expect(error).toBeInstanceOf(ValidationException);
-      }
-    });
-
-    it('should send call handlePrismaError if prisma throws error', async () => {
-      prismaMock.user.findMany.mockImplementation(() => {
-        throw new Error();
-      });
-
-      try {
-        await UserController.getMany(mockedNextApiRequest, mockedNextApiResponse);
-      } catch (error) {
-        expect(mockedHandlePrismaError).toHaveBeenCalled();
       }
     });
   });
@@ -202,18 +159,6 @@ describe('User controller', () => {
         expect(error).toBeInstanceOf(NotFoundException);
       }
     });
-
-    it('should send call handlePrismaError if prisma throws error', async () => {
-      prismaMock.user.findUnique.mockImplementation(() => {
-        throw new Error();
-      });
-
-      try {
-        await UserController.getByHash(mockedNextApiRequest, mockedNextApiResponse);
-      } catch (error) {
-        expect(mockedHandlePrismaError).toHaveBeenCalled();
-      }
-    });
   });
 
   describe('getById', () => {
@@ -249,24 +194,12 @@ describe('User controller', () => {
         expect(error).toBeInstanceOf(NotFoundException);
       }
     });
-
-    it('should send call handlePrismaError if prisma throws error', async () => {
-      prismaMock.user.findUnique.mockImplementation(() => {
-        throw new Error();
-      });
-
-      try {
-        await UserController.getById(mockedNextApiRequest, mockedNextApiResponse);
-      } catch (error) {
-        expect(mockedHandlePrismaError).toHaveBeenCalled();
-      }
-    });
   });
 
   describe('updateUser', () => {
     beforeEach(() => {
       mockedNextApiRequest.body = {
-        accountHash: '0xabc123',
+        hash: '0xabc123',
       };
       mockedNextApiRequest.query = {
         id: '1',
@@ -279,18 +212,6 @@ describe('User controller', () => {
       await UserController.updateUser(mockedNextApiRequest, mockedNextApiResponse);
       expect(mockedNextApiResponse.status).toHaveBeenCalledWith(HttpResponseCodesEnum.OK);
       expect(mockedResponseStatusFn).toHaveBeenCalledWith(mockedUser);
-    });
-
-    it('should send call handlePrismaError if prisma throws error', async () => {
-      prismaMock.user.update.mockImplementation(() => {
-        throw new Error();
-      });
-
-      try {
-        await UserController.updateUser(mockedNextApiRequest, mockedNextApiResponse);
-      } catch (error) {
-        expect(mockedHandlePrismaError).toHaveBeenCalled();
-      }
     });
   });
 });

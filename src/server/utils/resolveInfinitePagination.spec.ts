@@ -1,4 +1,5 @@
-import { DEFAULT_ITEMS_PER_PAGE } from '../constants';
+import { DEFAULT_ITEMS_PER_PAGE } from '@/server/constants';
+
 import { resolveInfinitePagination } from './resolveInfinitePagination';
 
 describe('resolveInfinitePagination', () => {

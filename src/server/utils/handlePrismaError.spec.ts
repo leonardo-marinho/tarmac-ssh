@@ -1,9 +1,9 @@
 import { mockPrismaClientKnownRequestError } from '@/lib/mocks/PrismaClientKnownRequestError.mock';
+import { PrismaErrorsEnum } from '@/server/enums';
+import { NotFoundException } from '@/server/exceptions/NotFound.exception';
+import { NotTreatedException } from '@/server/exceptions/NotTreated.exception';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-import { PrismaErrorsEnum } from '../enums';
-import { NotFoundException } from '../exceptions/NotFound.exception';
-import { NotTreatedException } from '../exceptions/NotTreated.exception';
 import { handlePrismaError } from './handlePrismaError';
 
 describe('handlePrismaError', () => {

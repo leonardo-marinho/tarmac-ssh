@@ -1,8 +1,8 @@
 import { GetManyDTO } from '@/server/types';
 
-export type GetManyUserDTO = GetManyDTO<{
-  accountHashes?: string;
+export type GetManyUserArgs = GetManyDTO<{
   disabled?: string;
+  hashes?: string;
   ids?: string;
   usernames?: string;
 }>;

@@ -1,5 +1,5 @@
-import { DEFAULT_ITEMS_PER_PAGE } from '../constants';
-import { InfinitePaginationResponseType, InfinitePaginationType } from '../types';
+import { DEFAULT_ITEMS_PER_PAGE } from '@/server/constants';
+import { InfinitePaginationResponseType, InfinitePaginationType } from '@/server/types';
 
 export const resolveInfinitePaginationResponse = <TResponseData>(
   data: TResponseData | TResponseData[],

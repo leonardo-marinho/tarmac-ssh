@@ -1,9 +1,17 @@
+import MetaMaskLoginButton from '@/client/components/MetaMaskLoginButton/MetaMaskLoginButton';
 import InlineNav from '@/client/components/UI/InlineNav/InlineNav';
 import InlineNavItem from '@/client/components/UI/InlineNavItem/InlineNavItem';
 import Link from '@/client/components/UI/Link/Link';
+import { useUser } from '@/client/contexts/UserProvider';
 import { FC } from 'react';
 
 const Landing: FC = () => {
+  const { login } = useUser();
+
+  const handleConnectMetaMaskButtonClick = async () => {
+    await login();
+  };
+
   return (
     <div className="h-full w-full">
       <header className="absolute left-0 top-0 flex h-14 w-full flex-row justify-end px-20">
@@ -16,7 +24,9 @@ const Landing: FC = () => {
           <InlineNavItem>
             <Link href="/about">About</Link>
           </InlineNavItem>
-          <InlineNavItem className="font-medium text-neutral-400">Sign in</InlineNavItem>
+          <InlineNavItem>
+            <MetaMaskLoginButton onClick={handleConnectMetaMaskButtonClick} />
+          </InlineNavItem>
         </InlineNav>
       </header>
       <main className="flex h-full w-full cursor-default items-center justify-between pt-14">

@@ -1,12 +1,15 @@
+import { ApiErrors } from '@/server/constants';
+import { HttpResponseCodesEnum } from '@/server/enums';
+import { NotFoundException } from '@/server/exceptions/NotFound.exception';
+import { NotTreatedException } from '@/server/exceptions/NotTreated.exception';
+import { UnauthorizedException } from '@/server/exceptions/Unauthorized.exception';
+import { UnsupportedMethodException } from '@/server/exceptions/UnsupportedMethod.exception';
+import { ValidationException } from '@/server/exceptions/Validation.exception';
+import { ControllerErrorResponseType } from '@/server/types';
+import { Prisma } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { ApiErrors } from '../constants';
-import { HttpResponseCodesEnum } from '../enums';
-import { NotFoundException } from '../exceptions/NotFound.exception';
-import { NotTreatedException } from '../exceptions/NotTreated.exception';
-import { UnsupportedMethodException } from '../exceptions/UnsupportedMethod.exception';
-import { ValidationException } from '../exceptions/Validation.exception';
-import { ControllerErrorResponseType } from '../types';
+import { handlePrismaError } from './handlePrismaError';
 
 export const handleApiError = (
   _: NextApiRequest,
@@ -14,6 +17,13 @@ export const handleApiError = (
   error: Error,
 ): void => {
   const message = error.message;
+  try {
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      handlePrismaError(error);
+    }
+  } catch (e) {
+    error = e as Error;
+  }
 
   if (error instanceof UnsupportedMethodException) {
     res.status(HttpResponseCodesEnum.METHOD_NOT_ALLOWED).json({
@@ -33,6 +43,11 @@ export const handleApiError = (
   } else if (error instanceof NotTreatedException) {
     res.status(HttpResponseCodesEnum.INTERNAL_SERVER_ERROR).json({
       ...ApiErrors.NOT_TREATED,
+      message,
+    });
+  } else if (error instanceof UnauthorizedException) {
+    res.status(HttpResponseCodesEnum.UNAUTHORIZED).json({
+      ...ApiErrors.UNAUTHORIZED,
       message,
     });
   } else {

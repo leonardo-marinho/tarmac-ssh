@@ -4,12 +4,18 @@
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:eslint-plugin-perfectionist/recommended-alphabetical"
+    "plugin:eslint-plugin-perfectionist/recommended-alphabetical",
+    "plugin:storybook/recommended"
   ],
   "parser": "@typescript-eslint/parser",
   "plugins": ["@typescript-eslint", "perfectionist"],
   "rules": {
     "import/no-anonymous-default-export": "off",
-    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }]
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_"
+      }
+    ]
   }
 }

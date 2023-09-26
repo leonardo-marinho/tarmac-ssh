@@ -1,8 +1,8 @@
+import { CreateUserArgs } from '@/lib/models/dto/CreateUserArgs.dto';
 import { object } from 'yup';
 
-import { CreateUserDTO } from '../models/dto/CreateUser.dto';
 import { yupHashValueType } from './types/HashValueType.yup';
 
-export const hashDtoSchema = object<CreateUserDTO>({
+export const hashArgsSchema = object<CreateUserArgs>({
   hash: yupHashValueType.required(),
 });
