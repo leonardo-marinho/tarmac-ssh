@@ -45,3 +45,9 @@ export interface InfinitePaginationType {
 }
 
 export type GetManyDTO<TModel> = ModelWithoutLogs<TModel> & InfinitePaginationDTO;
+
+export type IdType = number;
+
+export type HashType = string;
+
+export type KeyValuePair<TKey, TValue> = { key: TKey; value: TValue };

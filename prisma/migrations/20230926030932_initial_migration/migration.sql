@@ -34,7 +34,7 @@ CREATE TABLE "GameRound" (
 CREATE TABLE "User" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
-    "accountHash" TEXT NOT NULL,
+    "hash" TEXT NOT NULL,
     "disabled" BOOLEAN NOT NULL DEFAULT false,
     "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
@@ -46,7 +46,7 @@ CREATE TABLE "User" (
 CREATE TABLE "UserTransaction" (
     "id" SERIAL NOT NULL,
     "amount" DOUBLE PRECISION NOT NULL,
-    "contractHash" TEXT NOT NULL,
+    "hash" TEXT NOT NULL DEFAULT '',
     "userId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP,
@@ -58,7 +58,7 @@ CREATE TABLE "UserTransaction" (
 CREATE UNIQUE INDEX "User_username_key" ON "User"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_accountHash_key" ON "User"("accountHash");
+CREATE UNIQUE INDEX "User_hash_key" ON "User"("hash");
 
 -- AddForeignKey
 ALTER TABLE "GameBet" ADD CONSTRAINT "GameBet_gameRoundId_fkey" FOREIGN KEY ("gameRoundId") REFERENCES "GameRound"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

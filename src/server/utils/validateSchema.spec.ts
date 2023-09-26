@@ -1,17 +1,17 @@
-import { createUserDtoSchema } from '@/lib/validations/CreateUserDto.schema';
-import { idDtoSchema } from '@/lib/validations/IdDto.schema';
+import { createUserArgsSchema } from '@/lib/validations/CreateUserArgs.schema';
+import { idArgsSchema } from '@/lib/validations/IdArgs.schema';
+import { ValidationException } from '@/server/exceptions/Validation.exception';
 
-import { ValidationException } from '../exceptions/Validation.exception';
 import { validateSchema } from './validateSchema';
 
 describe('validationSchema', () => {
   it('should throw an error if the schema is invalid', () => {
-    expect(() => validateSchema(createUserDtoSchema, { id: true })).toThrowError(
+    expect(() => validateSchema(createUserArgsSchema, { id: true })).toThrowError(
       ValidationException,
     );
   });
 
   it('should not throw an error if the schema is valid', () => {
-    expect(() => validateSchema(idDtoSchema, { id: 1 })).not.toThrowError(ValidationException);
+    expect(() => validateSchema(idArgsSchema, { id: 1 })).not.toThrowError(ValidationException);
   });
 });
