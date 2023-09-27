@@ -18,8 +18,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
         return await UserTransactionController.getTopUserByAmount(req, res);
       } else if (req.query.userId) {
         return await UserTransactionController.getTotalAmountBySingleUser(req, res);
-      } else {
-        return await UserTransactionController.getMany(req, res);
       }
     }
   } catch (error) {
