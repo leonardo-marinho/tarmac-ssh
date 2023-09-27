@@ -1,23 +1,16 @@
 import prisma from '@/lib/database/client';
 import { CreateUserTransactionArgsDto } from '@/lib/models/dto/CreateUserTransactionArgs.dto';
-import { GetManyUserTransactionDTO } from '@/lib/models/dto/GetManyUserTransaction.dto';
 import { HashArgs } from '@/lib/models/dto/HashArgs.dto';
 import { IdArgs } from '@/lib/models/dto/IdArgs.dto';
 import { createUserTransactionArgsSchema } from '@/lib/validations/CreateUserTransactionArgs.schema';
-import { getManyUserTransactionArgsSchema } from '@/lib/validations/GetManyUserTransactionArgs.schema';
 import { hashArgsSchema } from '@/lib/validations/HashArgs.schema';
 import { idArgsSchema } from '@/lib/validations/IdArgs.schema';
-import { resolveBulkArgs } from '@/server/utils/resolveBulkArgs';
-import { resolvePrismaPaginationArgs } from '@/server/utils/resolvePrismaPaginationArgs';
-import { Prisma, UserTransaction } from '@prisma/client';
+import { UserTransaction } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { HttpResponseCodesEnum } from '../enums';
 import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
 import { NotFoundException } from '../exceptions/NotFound.exception';
-import { InfinitePaginationType } from '../types';
-import { resolveInfinitePagination } from '../utils/resolveInfinitePagination';
-import { resolveInfinitePaginationResponse } from '../utils/resolveInfinitePaginationResponse';
 import { validateSchema } from '../utils/validateSchema';
 
 class UserTransactionController {
@@ -89,38 +82,6 @@ class UserTransactionController {
     }
 
     res.status(HttpResponseCodesEnum.OK).json(response);
-  }
-
-  async getMany(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const query: GetManyUserTransactionDTO = req.query as unknown as GetManyUserTransactionDTO;
-    const pagination: InfinitePaginationType = resolveInfinitePagination(req.query);
-    validateSchema<GetManyUserTransactionDTO>(getManyUserTransactionArgsSchema, query);
-
-    const response = await prisma.userTransaction.findMany({
-      where: resolveBulkArgs<Prisma.UserTransactionWhereInput>([
-        {
-          key: 'id',
-          value: query?.ids,
-        },
-        {
-          key: 'amount',
-          value: query?.amount,
-        },
-        {
-          key: 'hash',
-          value: query?.contractHashes,
-        },
-        {
-          key: 'userId',
-          value: query?.userId,
-        },
-      ]),
-      ...resolvePrismaPaginationArgs(pagination),
-    });
-
-    res
-      .status(HttpResponseCodesEnum.OK)
-      .json(resolveInfinitePaginationResponse(response, pagination));
   }
 
   async getTopUserByAmount(req: NextApiRequest, res: NextApiResponse): Promise<void> {
