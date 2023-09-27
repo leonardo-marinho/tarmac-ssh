@@ -1,10 +1,12 @@
 import prisma from '@/lib/database/client';
 import { CreateUserTransactionArgsDto } from '@/lib/models/dto/CreateUserTransactionArgs.dto';
 import { GetManyUserTransactionDTO } from '@/lib/models/dto/GetManyUserTransaction.dto';
-import { HashDTO } from '@/lib/models/dto/Hash.dto';
-import { IdDTO } from '@/lib/models/dto/Id.dto';
+import { HashArgs } from '@/lib/models/dto/HashArgs.dto';
+import { IdArgs } from '@/lib/models/dto/IdArgs.dto';
 import { createUserTransactionArgsSchema } from '@/lib/validations/CreateUserTransactionArgs.schema';
 import { getManyUserTransactionArgsSchema } from '@/lib/validations/GetManyUserTransactionArgs.schema';
+import { hashArgsSchema } from '@/lib/validations/HashArgs.schema';
+import { idArgsSchema } from '@/lib/validations/IdArgs.schema';
 import { resolveBulkArgs } from '@/server/utils/resolveBulkArgs';
 import { resolvePrismaPaginationArgs } from '@/server/utils/resolvePrismaPaginationArgs';
 import { Prisma, UserTransaction } from '@prisma/client';
@@ -39,8 +41,8 @@ class UserTransactionController {
   }
 
   async deleteById(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const query: IdDTO = req.query;
-    validateSchema<IdDTO>(idDtoSchema, query);
+    const query: IdArgs = req.query;
+    validateSchema<IdArgs>(idArgsSchema, query);
 
     const response: null | UserTransaction = await prisma.userTransaction.delete({
       where: {
@@ -56,12 +58,12 @@ class UserTransactionController {
   }
 
   async getByHash(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const query: HashDTO = req.query;
-    validateSchema<HashDTO>(hashDtoSchema, query);
+    const query: HashArgs = req.query;
+    validateSchema<HashArgs>(hashArgsSchema, query);
 
-    const response: null | UserTransaction = await prisma.userTransaction.findUnique({
+    const response: null | UserTransaction = await prisma.userTransaction.findFirst({
       where: {
-        contractHash: query.hash,
+        hash: query.hash,
       },
     });
 
@@ -73,8 +75,8 @@ class UserTransactionController {
   }
 
   async getById(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const query: IdDTO = req.query;
-    validateSchema<IdDTO>(idDtoSchema, query);
+    const query: IdArgs = req.query;
+    validateSchema<IdArgs>(idArgsSchema, query);
 
     const response: null | UserTransaction = await prisma.userTransaction.findUnique({
       where: {
@@ -101,15 +103,15 @@ class UserTransactionController {
           value: query?.ids,
         },
         {
-          key: 'amounts',
+          key: 'amount',
           value: query?.amount,
         },
         {
           key: 'hash',
-          value: query?.hashes,
+          value: query?.contractHashes,
         },
         {
-          key: 'userIds',
+          key: 'userId',
           value: query?.userId,
         },
       ]),
@@ -130,22 +132,27 @@ class UserTransactionController {
         },
       });
 
-      const totalAmounts = allTransactions.reduce((acc, transaction) => {
-        if (!acc[transaction.userId]) {
-          acc[transaction.userId] = 0;
-        }
-        acc[transaction.userId] += transaction.amount;
-        return acc;
-      }, {});
+      const totalAmounts: Record<number, number> = allTransactions.reduce(
+        (acc: Record<number, number>, transaction) => {
+          if (!acc[transaction.userId]) {
+            acc[transaction.userId] = 0;
+          }
+          acc[transaction.userId] += transaction.amount;
+          return acc;
+        },
+        {},
+      );
 
       // Find the user with the maximum total transaction amount
       const topUserId = Object.keys(totalAmounts).reduce((acc, userId) => {
-        return totalAmounts[userId] > totalAmounts[acc] ? userId : acc;
+        return totalAmounts[Number(userId) as number] > totalAmounts[Number(acc) as number]
+          ? userId
+          : acc;
       });
 
       res
         .status(HttpResponseCodesEnum.OK)
-        .json({ totalAmount: totalAmounts[topUserId], userId: topUserId });
+        .json({ totalAmount: totalAmounts[Number(topUserId) as number], userId: topUserId });
     } catch (error) {
       console.error('Error while calculating the top user by amount', error);
       throw new InternalServerErrorException('Failed to calculate the top user by amount');
@@ -201,7 +208,7 @@ class UserTransactionController {
     });
 
     try {
-      const totalAmounts = allTransactions.reduce((acc, transaction) => {
+      const totalAmounts = allTransactions.reduce((acc: Record<number, number>, transaction) => {
         if (!acc[transaction.userId]) {
           acc[transaction.userId] = 0;
         }
