@@ -8,10 +8,7 @@ import { handleUnsupportedMethod } from '@/server/utils/handleUnsupportedMethod'
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     if (req.method === HttpMethodsEnum.POST) {
-      return await GameRoundController.create(req, res);
-    }
-    if (req.method === HttpMethodsEnum.GET) {
-      return await GameRoundController.getMany(req, res);
+      return await GameRoundController.start(req, res);
     }
   } catch (error) {
     return handleApiError(req, res, error as Error);

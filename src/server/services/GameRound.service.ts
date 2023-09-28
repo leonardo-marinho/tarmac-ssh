@@ -11,7 +11,7 @@ interface GameRoundBulkSearchArgs extends Prisma.GameRoundWhereInput {
 
 class GameRoundService {
   async bulkSearch(
-    { gameIds, ids, ...nonBulkSearchArgs }: GameRoundBulkSearchArgs,
+    { gameIds, ids, status, ...nonBulkSearchArgs }: GameRoundBulkSearchArgs,
     pagination: InfinitePaginationType,
   ): Promise<GameRound[]> {
     const whereArgs = resolveBulkArgs<Prisma.GameRoundWhereInput>(
@@ -23,6 +23,10 @@ class GameRoundService {
         {
           key: 'gameId',
           value: gameIds,
+        },
+        {
+          key: 'status',
+          value: String(status),
         },
       ],
       nonBulkSearchArgs,
@@ -40,7 +44,6 @@ class GameRoundService {
     const response: GameRound | null = await prisma.gameRound.create({
       data,
     });
-
     return response;
   }
 

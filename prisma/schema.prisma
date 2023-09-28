@@ -29,6 +29,7 @@ model GameBet {
 model GameRound {
   id         Int       @id @default(autoincrement())
   gameId     Int
+  status     String
   game       Game      @relation(fields: [gameId], references: [id])
   bets       GameBet[]
   createdAt DateTime? @default(now()) @db.Timestamp(0)

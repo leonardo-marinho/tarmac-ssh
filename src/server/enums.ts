@@ -33,3 +33,9 @@ export enum PrismaErrorsEnum {
   UNIQUE_CONSTRAINT_VALIDATION = 'P2002',
   UNKNOWN = 'P-1',
 }
+
+export enum RoundStatus {
+  COMPLETED = 'COMPLETED',
+  RUNNING = 'RUNNING',
+  WAITING_BETS = 'WAITING BETS',
+}
