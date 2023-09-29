@@ -7,7 +7,7 @@ const BUTTON_ICON_PRIMARY_COLOR = '#FFF';
 const BUTTON_ICON_SECONDARY_COLOR = '#FFF';
 const BUTTON_SIZE_SMALL_CLASSES = 'px-3 py-2';
 const BUTTON_SIZE_LARGE_CLASSES = 'px-6 py-3';
-const BUTTON_VARIANT_PRIMARY_CLASSES = 'bg-indigo-800 font-bold text-white';
+const BUTTON_VARIANT_PRIMARY_CLASSES = 'bg-white font-bold text-special2';
 const BUTTON_VARIANT_SECONDARY_CLASSES = 'bg-gray-500 font-semibold text-white';
 
 const ButtonUtils = {

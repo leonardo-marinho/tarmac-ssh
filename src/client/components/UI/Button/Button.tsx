@@ -48,7 +48,8 @@ const Button: FC<ButtonProps> = ({
   return (
     <button
       className={classNames(
-        'flex flex-row items-center rounded-md text-xs uppercase shadow',
+        'flex flex-row items-center justify-center rounded-full text-xs uppercase shadow',
+        { 'opacity-70': props.disabled },
         computedClassName,
         className,
       )}
@@ -61,7 +62,7 @@ const Button: FC<ButtonProps> = ({
           <SvgIcon color={iconColor} icon={icon} size={'small'} />
         </span>
       )}
-      <span className="flex flex-row">
+      <span className="flex flex-row px-4 py-2">
         {text}
         {isLoading && <Spinner className="ml-2.5" size="small" />}
       </span>

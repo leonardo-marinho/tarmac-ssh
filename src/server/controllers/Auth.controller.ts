@@ -13,6 +13,9 @@ import { validateSchema } from '@/server/utils/validateSchema';
 import { User } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { NotFoundException } from '../exceptions/NotFound.exception';
+import UserService from '../services/User.service';
+
 class AuthController {
   // async isRegistred(req: NextApiRequest, res: NextApiResponse) {
   //   const query: HashArgs = req.query;
@@ -32,12 +35,18 @@ class AuthController {
       throw new UnauthorizedException(`User with hash ${body.hash} is not registered`);
     }
 
-    const accessToken = await AuthService.signIn(body.hash!);
+    const user = await UserService.getByHash(body.hash!);
+
+    if (!user) {
+      throw new NotFoundException(`User with hash ${body.hash!} not found`);
+    }
+
+    const accessToken = await AuthService.signIn(user);
     if (accessToken === null) {
       throw new InternalServerErrorException(`Error while signing up user with hash ${body.hash}`);
     }
 
-    res.status(HttpResponseCodesEnum.OK).json({ accessToken } as AuthSignInResponse);
+    res.status(HttpResponseCodesEnum.OK).json({ accessToken, user } as AuthSignInResponse);
   }
 
   async signUp(req: NextApiRequest, res: NextApiResponse) {

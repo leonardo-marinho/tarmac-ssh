@@ -1,3 +1,3 @@
-export const moneyToText = (value: number, symbol: string, fixed = 2) => {
-  return `${symbol}${value.toFixed(fixed)}`;
+export const moneyToText = (value: number | undefined, symbol: string, fixed = 2) => {
+  return `${symbol} ${(value || 0).toFixed(fixed)}`;
 };

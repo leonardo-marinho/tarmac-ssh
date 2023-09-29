@@ -1,16 +1,20 @@
 import prisma from '@/lib/database/client';
 import { CreateUserTransactionArgsDto } from '@/lib/models/dto/CreateUserTransactionArgs.dto';
+import { GetTotalAmountByUserResponse } from '@/lib/models/dto/GetTotalAmountByUserResponse.dto';
 import { HashArgs } from '@/lib/models/dto/HashArgs.dto';
 import { IdArgs } from '@/lib/models/dto/IdArgs.dto';
+import { SuccessResponse } from '@/lib/models/dto/SuccessResponse.dto';
 import { createUserTransactionArgsSchema } from '@/lib/validations/CreateUserTransactionArgs.schema';
 import { hashArgsSchema } from '@/lib/validations/HashArgs.schema';
 import { idArgsSchema } from '@/lib/validations/IdArgs.schema';
 import { UserTransaction } from '@prisma/client';
 import { NextApiRequest, NextApiResponse } from 'next';
 
+import { REFILL_AMOUNT } from '../constants';
 import { HttpResponseCodesEnum } from '../enums';
 import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
 import { NotFoundException } from '../exceptions/NotFound.exception';
+import UserService from '../services/User.service';
 import { validateSchema } from '../utils/validateSchema';
 
 class UserTransactionController {
@@ -161,27 +165,43 @@ class UserTransactionController {
   }
 
   async getTotalAmountByUser(req: NextApiRequest, res: NextApiResponse): Promise<void> {
-    const allTransactions = await prisma.userTransaction.findMany({
-      select: {
-        amount: true,
-        userId: true,
+    const query: HashArgs = req.query;
+    validateSchema<HashArgs>(hashArgsSchema, query);
+
+    const transactions = await prisma.userTransaction.findMany({
+      where: {
+        user: {
+          hash: query.hash,
+        },
       },
     });
 
-    try {
-      const totalAmounts = allTransactions.reduce((acc: Record<number, number>, transaction) => {
-        if (!acc[transaction.userId]) {
-          acc[transaction.userId] = 0;
-        }
-        acc[transaction.userId] += transaction.amount;
-        return acc;
-      }, {});
+    const totalAmount = transactions.reduce((acc, transaction) => acc + transaction.amount, 0);
+    res.status(HttpResponseCodesEnum.OK).json(totalAmount as GetTotalAmountByUserResponse);
+  }
 
-      res.status(HttpResponseCodesEnum.OK).json(totalAmounts);
-    } catch (error) {
-      console.error('Error while calculating the total amount per user', error);
-      throw new InternalServerErrorException('Failed to calculate the total amount per user');
+  async refill(req: NextApiRequest, res: NextApiResponse): Promise<void> {
+    const query: HashArgs = JSON.parse(req.body);
+    validateSchema<HashArgs>(hashArgsSchema, query);
+
+    const user = await UserService.getByHash(query.hash!);
+    if (!user) {
+      throw new NotFoundException(`User, with hash ${query.hash}, not found`);
     }
+
+    const response = await prisma.userTransaction.create({
+      data: {
+        amount: REFILL_AMOUNT,
+        hash: '0x001',
+        userId: user.id,
+      },
+    });
+
+    if (!response) {
+      throw new InternalServerErrorException('UserTransaction could not be created');
+    }
+
+    res.status(HttpResponseCodesEnum.CREATED).json({ success: true } as SuccessResponse);
   }
 }
 

@@ -15,17 +15,7 @@ class AuthService {
     return !!user;
   }
 
-  async signIn(hash: HashType): Promise<null | string> {
-    const user = await prisma.user.findFirst({
-      where: {
-        hash,
-      },
-    });
-
-    if (!user) {
-      return null;
-    }
-
+  async signIn(user: User): Promise<null | string> {
     return jwt.sign(
       { address: user.hash, username: user.username },
       process.env.JWT_SECRET as string,

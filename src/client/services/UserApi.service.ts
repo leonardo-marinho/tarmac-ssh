@@ -10,7 +10,7 @@ class UserApi extends ApiService {
   }
 
   async getByHash(args: Required<HashArgs>) {
-    const response = await this.get<UserGetByHashResponse>(`/hash/${args.hash}}`);
+    const response = await this.get<UserGetByHashResponse>(`/hash/${args.hash}`);
     return await response.json();
   }
 }
