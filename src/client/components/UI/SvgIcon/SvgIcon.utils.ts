@@ -1,5 +1,5 @@
 const SIZE_SMALL = '1rem';
-const SIZE_MEDIUM = '2rem';
+const SIZE_MEDIUM = '1.5rem';
 const SIZE_LARGE = '3rem';
 
 export type SvgSizesType = 'large' | 'medium' | 'small';

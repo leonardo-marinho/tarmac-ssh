@@ -13,21 +13,9 @@ export const RouterProvider: FC<PropsWithChildren> = ({ children }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if (router.pathname === Paths.Home) {
-      if (isLogged) {
-        router.push(Paths.Dashboard);
-      } else if (isRegisterPending) {
-        router.push(Paths.SignUp);
-      }
-    } else if (router.pathname === Paths.SignUp) {
-      if (isLogged) {
-        router.push(Paths.Dashboard);
-      } else if (!isRegisterPending) {
-        router.push(Paths.Home);
-      }
-    } else if (!publicPaths.some((path) => path === router.pathname) && !isLogged) {
+    if (!publicPaths.some((path) => path === router.pathname) && !isLogged) {
       toast.error('You must be logged in to access this page');
-      router.push(Paths.Home);
+      router.push(Paths.Dashboard);
     }
   }, [isLogged, isRegisterPending, router]);
 

@@ -18,7 +18,6 @@ class AuthApi extends ApiService {
   }
 
   async signUp(args: AuthSignUpArgs): Promise<boolean> {
-    console.log(this);
     const response = await this.post<AuthSignUpResponse, AuthSignUpResponse>(`/signup`, args);
     return response.status === HttpResponseCodesEnum.CREATED;
   }
