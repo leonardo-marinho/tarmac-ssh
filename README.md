@@ -21,6 +21,17 @@ npm run db:migrate
 npm run dev
 ```
 
+### Deploying contracts
+
+1. Fill .env with Infura API URL and private key (create an account [here](https://www.infura.io/))
+2. Create your contract inside contracts folder
+3. Run deploy script
+
+```bash
+# Replace MyContract with your contract name
+CONTRACT_NAME=MyContract npm run hardhat:deploy
+```
+
 ### Application links
 
 - UI will be running on http://localhost:3000

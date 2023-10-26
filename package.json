@@ -16,7 +16,8 @@
     "prepare": "husky install",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
-    "db:reset": "prisma migrate reset"
+    "db:reset": "prisma migrate reset",
+    "hardhat:deploy": "hardhat run scripts/deploy.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",
