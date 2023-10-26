@@ -15,6 +15,7 @@ import { HttpResponseCodesEnum } from '../enums';
 import { InternalServerErrorException } from '../exceptions/InternalServerError.exception';
 import { NotFoundException } from '../exceptions/NotFound.exception';
 import UserService from '../services/User.service';
+import UserTransactionService from '../services/UserTransaction.service';
 import { validateSchema } from '../utils/validateSchema';
 
 class UserTransactionController {
@@ -189,12 +190,10 @@ class UserTransactionController {
       throw new NotFoundException(`User, with hash ${query.hash}, not found`);
     }
 
-    const response = await prisma.userTransaction.create({
-      data: {
-        amount: REFILL_AMOUNT,
-        hash: '0x001',
-        userId: user.id,
-      },
+    const response = await UserTransactionService.create({
+      amount: REFILL_AMOUNT,
+      hash: '0x001',
+      userId: user.id,
     });
 
     if (!response) {
