@@ -5,8 +5,8 @@ require('dotenv').config();
 module.exports = {
   networks: {
     sepolia: {
-      accounts: [process.env.SEPOLIA_PRIVATE_KEY],
-      url: process.env.SEPOLIA_API_URL,
+      accounts: [process.env.INFURA_PRIVATE_KEY],
+      url: process.env.INFURA_API_URL,
     },
   },
   paths: {
