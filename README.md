@@ -41,5 +41,6 @@ CONTRACT_NAME=MyContract npm run hardhat:deploy
 
 - [Next.js Documentation](https://nextjs.org/docs)
 - [Hardhat (Solidity)](https://www.pointer.gg/tutorials/solid-solidity/de5cf2d9-86c3-4de7-9260-ed59491abfa1)
-- [Prisma reference](https://www.prisma.io/docs/reference)
+- [Ethers.js](https://docs.ethers.org/v6/getting-started/)
 - [Understanding Blockchain](https://andersbrownworth.com/blockchain/blockchain)
+- [Prisma reference](https://www.prisma.io/docs/reference)
