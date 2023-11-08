@@ -10,9 +10,12 @@ module.exports = {
     },
   },
   paths: {
-    artifacts: './artifacts',
-    cache: './cache',
-    sources: './contracts',
+    artifacts: '.hardhat/artifacts',
+    cache: '.hardhat/cache',
+    sources: 'src/lib/ethers/contracts',
   },
   solidity: '0.8.17',
+  typechain: {
+    outDir: 'src/lib/ethers/contracts/generated',
+  },
 };

@@ -6,6 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "postinstall": "npm run hardhat:generate",
     "storybook": "start-storybook -p 6006 -s public",
     "lint": "next lint --fix --max-warnings=0",
     "lint:check": "next lint --max-warnings=0",
@@ -17,7 +18,8 @@
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:reset": "prisma migrate reset",
-    "hardhat:deploy": "hardhat run scripts/deploy.ts"
+    "hardhat:deploy": "hardhat run scripts/deploy.ts",
+    "hardhat:generate": "hardhat typechain"
   },
   "dependencies": {
     "@prisma/client": "^5.2.0",

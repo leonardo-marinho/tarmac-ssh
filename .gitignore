@@ -35,8 +35,7 @@ next-env.d.ts
 .vscode/launch.json
 .idea/
 
-# harthat
-artifacts
-cache
+# hardhat
+.hardhat
 .swc
-typechain-types
+src/lib/ethers/contracts/generated
